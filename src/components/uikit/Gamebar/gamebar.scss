@@ -1,0 +1,14 @@
+.gamebar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 38px;
+    gap: 2px;
+    cursor: pointer;
+}
+
+.active-bar {
+    background:linear-gradient(to right, rgba(21, 93, 252, 1), rgba(152, 16, 250, 1));
+    border-radius: 14px;
+}
