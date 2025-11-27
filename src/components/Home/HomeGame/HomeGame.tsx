@@ -144,7 +144,7 @@ export const HomeGame = () => {
             <div className="bg-city" />
             <img
               className="window-icon"
-              src="../../src/assets/images/car.png"
+              src="/rocket-casino-project/src/assets/images/car.png"
               alt="game"
               data-running={isRunning}
             />

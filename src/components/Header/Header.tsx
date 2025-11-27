@@ -6,7 +6,7 @@ export const Header = () => {
     return (
         <header className="header">
             <div className="header__title">
-                <img src="../../src/assets/icons/Logo.svg" alt="logo" />
+                <img src="/rocket-casino-project/src/assets/icons/Logo.svg" alt="logo" />
                 Rocket Casino
             </div>
 
@@ -14,19 +14,19 @@ export const Header = () => {
                 <div className="header__actions-wallet">
                     <img 
                       className="wallet-icon" 
-                      src="../../src/assets/icons/Wallet.svg" 
+                      src="/rocket-casino-project/src/assets/icons/Wallet.svg" 
                       alt="wallet" 
                     />
                     <p>$1000.00</p>
                 </div>
                 <div className="header__actions-settings">
-                    <img src="../../src/assets/icons/Settings.svg" alt="settings" />
+                    <img src="/rocket-casino-project/src/assets/icons/Settings.svg" alt="settings" />
                 </div>
                 
                 <div className="header__actions-logout" onClick={() => handleLogout()}>
                     <img
                       className="logout-icon"
-                      src="../../src/assets/icons/Logout.svg" 
+                      src="/rocket-casino-project/src/assets/icons/Logout.svg" 
                       alt="logout" 
                     />
                     Logout

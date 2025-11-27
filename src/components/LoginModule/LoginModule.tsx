@@ -35,7 +35,7 @@ export const LoginModule = () => {
             <div className="login__container">
               <div className="login__top">
                   <img 
-                    src="../../src/assets/icons/RocketLogo.svg" 
+                    src="/rocket-casino-project/src/assets/icons/RocketLogo.svg" 
                     alt="Rocket Logo" 
                   />
                   <p className="login__top-title">Rocket Casino</p>
@@ -107,7 +107,7 @@ export const LoginModule = () => {
                     widthSize={'100'} 
                     bgColor1={'rgba(0, 153, 102, 1)'} 
                     bgColor2={'rgba(21, 93, 252, 1)'}
-                    icon={'../../src/assets/icons/Login.svg'}
+                    icon={'/rocket-casino-project/src/assets/icons/Login.svg'}
                   />
 
                   <p
