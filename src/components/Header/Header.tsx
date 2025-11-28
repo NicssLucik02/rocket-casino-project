@@ -1,8 +1,12 @@
-import { useForm } from '../../assets/hooks/useForm';
-import './header.scss';
 
-export const Header = () => {
+import { useForm } from '../../hooks/useForm';
+import './header.scss';
+import { useBalance } from '../../hooks/useBalance';
+
+export const Header = ({ onSettingsClick }: { onSettingsClick: () => void }) => {
     const { handleLogout } = useForm();
+    const { balance } = useBalance();
+
     return (
         <header className="header">
             <div className="header__title">
@@ -17,9 +21,9 @@ export const Header = () => {
                       src="/rocket-casino-project/src/assets/icons/Wallet.svg" 
                       alt="wallet" 
                     />
-                    <p>$1000.00</p>
+                        <p>{balance !== null ? `$${balance.toFixed(2)}` : 'Loading...'}</p>
                 </div>
-                <div className="header__actions-settings">
+                <div className="header__actions-settings" onClick={onSettingsClick}>
                     <img src="/rocket-casino-project/src/assets/icons/Settings.svg" alt="settings" />
                 </div>
                 

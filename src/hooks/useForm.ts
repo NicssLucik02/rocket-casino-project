@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { supabase } from "../../utils/supabaseClient";
-import { formValidation } from "../../utils/formValidation";
-import type { FormDataType, FormErrors } from "../../types/Types";
+import type { FormDataType, FormErrors } from "../types/Types";
+import { formValidation } from "../utils/formValidation";
+import { supabase } from "../utils/supabaseClient";
 
 export const useForm = () => {
   const [formData, setFormData] = useState<FormDataType>({
@@ -32,6 +32,12 @@ const handleSignup = async () => {
     const { error } = await supabase.auth.signUp({
     email: formData.email,
     password: formData.password,
+    options: {
+      data: {
+        username: formData.username,
+      },
+      
+    },
   });
 
     if (error) {
@@ -49,12 +55,17 @@ const handleLogin = async () => {
   const { error } = await supabase.auth.signInWithPassword({
     email: formData.email,
     password: formData.password,
+    
   });
 
   if (error) {
     setLoginErrors({ server: error.message });
     return;
   }
+
+  const { data } = await supabase.from('profiles').select('*').limit(5)
+  console.log(data)
+  
 
   setFormData({email: '', password: '' });
 };

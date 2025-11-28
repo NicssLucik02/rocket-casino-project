@@ -1,14 +1,14 @@
 type Props = {
     placeholderValue: string;
     type: string;
-    bgColor: string;
+    bgColor?: string;
     widthSize: string;
     inputValue?: string | number;
     name?: string;
     handler: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const PrimaryInput: React.FC<Props> = ({placeholderValue, type, bgColor, widthSize, inputValue, handler, name}) => {
+export const PrimaryInput: React.FC<Props> = ({placeholderValue, type, bgColor='rgba(29, 41, 61, 1)', widthSize, inputValue, handler, name}) => {
     return (
             <input 
                 type={type}
@@ -18,6 +18,7 @@ export const PrimaryInput: React.FC<Props> = ({placeholderValue, type, bgColor, 
                 value={inputValue}
                 onChange={handler}
                 style={{
+                    boxSizing: 'border-box',
                     width:`${widthSize}%`, 
                     height:'36px', 
                     borderRadius:'8px', 

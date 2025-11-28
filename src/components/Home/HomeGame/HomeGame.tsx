@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState,} from "react";
 import "./homeGame.scss";
 import "./gameAnimations.scss";
 import { GameBar } from "../../uikit/Gamebar/GameBar";
@@ -6,90 +6,11 @@ import { PrimaryButton } from "../../uikit/Buttons/PrimaryButton";
 import { SecondaryButton } from "../../uikit/Buttons/SecondaryButton";
 import { PrimaryInput } from "../../uikit/Inputs/Input";
 import classNames from "classnames";
+import { useRocketGame } from "../../../hooks/useRocketGame";
 
 export const HomeGame = () => {
+  const { handleChangeBetAmount, startGame, animationIdRef, showConfetti, currentDuration, handleCashOut, isRunning, crashed, coeff, crashPoint, betAmount, betError} = useRocketGame();
   const [activeBar, setActiveBar] = useState<string>("Rocket");
-  const [isRunning, setIsRunning] = useState(false);
-  const [coeff, setCoeff] = useState<number>(1.0);
-  const [crashed, setCrashed] = useState(false);
-  const [crashPoint, setCrashPoint] = useState(0);
-  const [betAmount, setBetAmount] = useState<string>();
-
-  const handleChangeBetAmount = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setBetAmount(event.target.value);
-  };
-  const startTimeRef = useRef<number>(0);
-  const animationIdRef = useRef<number>(0);
-  const hasCashedOut = useRef(false);
-  const crashPointRef = useRef<number>(0);
-  const isRunningRef = useRef(false);
-
-  // Генерируем случайный краш от 1.10 до 20.00 (как в реальных играх)
-  const generateCrashPoint = () => {
-    const houseEdge = 0.01;
-    const r = Math.random();
-    const crash = 1 / (1 - r * (1 - houseEdge));
-    return Math.max(1.1, Math.min(crash, 20.0));
-  };
-
-  const startGame = () => {
-    if (isRunning) return;
-
-    setIsRunning(true);
-    setCrashed(false);
-    setCoeff(1.0);
-    hasCashedOut.current = false;
-    isRunningRef.current = true;
-    startTimeRef.current = Date.now();
-
-    const newCrashPoint = generateCrashPoint();
-    crashPointRef.current = newCrashPoint;
-    setCrashPoint(newCrashPoint);
-
-    console.log(`Game started with crash point: ${newCrashPoint.toFixed(2)}`);
-
-    // Запускаем рост коэффициента
-    const tick = () => {
-      // Проверяем через ref, чтобы получить актуальное значение
-      if (!isRunningRef.current) return;
-
-      const elapsed = (Date.now() - startTimeRef.current) / 1000;
-      const currentCoeff = Math.exp(elapsed * 0.15);
-
-      setCoeff(Number(currentCoeff.toFixed(2)));
-
-      if (currentCoeff >= crashPointRef.current) {
-        console.log(
-          `Crash! Reached ${currentCoeff.toFixed(
-            2
-          )} >= ${crashPointRef.current.toFixed(2)}`
-        );
-        setCoeff(crashPointRef.current);
-        setCrashed(true);
-        setIsRunning(false);
-        isRunningRef.current = false;
-        return;
-      }
-
-      animationIdRef.current = requestAnimationFrame(tick);
-    };
-
-    animationIdRef.current = requestAnimationFrame(tick);
-  };
-
-  // Кнопка Cash Out
-  const handleCashOut = () => {
-    if (!isRunning || crashed || hasCashedOut.current) return;
-    hasCashedOut.current = true;
-    setIsRunning(false);
-    isRunningRef.current = false;
-  };
-
-  const maxDuration = 12;
-  const speedMultiplier = Math.min(coeff / 1.5, 4);
-  const currentDuration = maxDuration / speedMultiplier;
 
   useEffect(() => {
     return () => {
@@ -165,7 +86,6 @@ export const HomeGame = () => {
                 inputValue={betAmount}
                 handler={handleChangeBetAmount}
               />
-
               <PrimaryButton
                 text={isRunning ? "Cashout" : "Launch Rocket"}
                 widthSize={"50"}
@@ -174,6 +94,8 @@ export const HomeGame = () => {
                 handler={isRunning ? () => handleCashOut() : () => startGame()}
               />
             </div>
+
+            <p style={{color: 'red', margin: '0'}}>{betError}</p>
 
             <div className="home-game__main-controls__additional">
               {["10", "50", "100", "500"].map((num) => {

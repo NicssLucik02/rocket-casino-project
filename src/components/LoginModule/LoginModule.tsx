@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useForm } from '../../assets/hooks/useForm';
 import { PrimaryButton } from '../uikit/Buttons/PrimaryButton';
 import { PrimaryInput } from '../uikit/Inputs/Input';
 import './loginModule.scss';
+import { useForm } from '../../hooks/useForm';
 
 export const LoginModule = () => {
   const {formData, handleChange, handleSignup, handleLogin, loginErrors, setLoginErrors} = useForm();
@@ -27,7 +27,6 @@ export const LoginModule = () => {
       await handleLogin();
     }
   };
-  console.log(loginErrors);
   
     return (
       <div className='wrapper'>

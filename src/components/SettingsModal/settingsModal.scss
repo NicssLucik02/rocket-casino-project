@@ -1,0 +1,121 @@
+.settings-modal {
+    &__overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 10;
+        cursor: pointer;
+    }
+}
+
+.settings-modal {
+    background-color: rgba(15, 23, 43, 1);
+    height: 450px;
+    width: 30%;
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+
+    &__container {
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__close-icon {
+        position: absolute;
+        cursor: pointer;
+        right: 10px;
+        top: 10px;
+    }
+
+    &__top {
+
+        &-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        &-subtitle {
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(144, 161, 185, 1);
+            margin: 8px 0 0 ;
+        }
+    }
+
+    &__input-text {
+        display: flex;
+        gap: 5px;
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    &__input-ch-counter {
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(144, 161, 185, 1);
+        margin: 4px 0 0 0;
+
+        &--error {
+            color: rgba(212, 24, 61, 1);
+        }
+    }
+
+    &__input-error {
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(212, 24, 61, 1);
+        margin: 4px 0 0 0;
+    }
+
+    &__panel {
+        background-color: rgba(29, 41, 61, 0.5);
+        padding: 16px;
+        border-radius: 10px;
+        font-size: 16px;
+        margin-top: 8px;
+
+        &-title {
+            margin: 0;
+            color: rgba(202, 213, 226, 1);
+        }
+
+        &-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        &-item {
+            // Можно добавить дополнительные стили для элементов, если нужно
+            // Например, padding или background для лучшего визуального разделения
+
+            &-desc {
+                color: rgba(144, 161, 185, 1);
+                margin: 0;
+                font-size: 14px;
+            }
+
+            &-value {
+                margin: 8px 0 0 0;
+                font-size: 16px;
+                font-weight: 600;
+            }
+        }
+    }
+
+    &__actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+    }
+}
