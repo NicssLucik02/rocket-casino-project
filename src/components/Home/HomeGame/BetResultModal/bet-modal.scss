@@ -1,0 +1,62 @@
+.bet-modal__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bet-modal {
+    position: relative;
+    background-color: rgb(29, 41, 61);
+    height: auto;
+    max-height: 90vh;
+    width: 35%;
+    border-radius: 10px;
+    z-index: 12;
+    overflow-y: auto;
+
+    @media (max-width: 768px) {
+        width: 60%;
+        max-height: 80vh;
+    }
+
+    @media (max-width: 480px) {
+        width: 90%;
+        max-height: 95vh;
+    }
+
+    &__container {
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    &__result {
+        font-size: 50px;
+        font-weight: 700;
+        position: absolute;
+        left: 35%;
+    }
+}
+
+.fail {
+    background: linear-gradient(to right, rgba(212, 24, 61, 1), rgb(126, 9, 32));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.win {
+    background: linear-gradient(to right, rgba(0, 153, 102, 1), rgba(0, 166, 62, 1));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}

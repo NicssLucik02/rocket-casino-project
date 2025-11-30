@@ -1,4 +1,4 @@
-import { useEffect, useState,} from "react";
+import { useState } from "react";
 import "./homeGame.scss";
 import "./gameAnimations.scss";
 import { GameBar } from "../../uikit/Gamebar/GameBar";
@@ -6,19 +6,19 @@ import { PrimaryButton } from "../../uikit/Buttons/PrimaryButton";
 import { SecondaryButton } from "../../uikit/Buttons/SecondaryButton";
 import { PrimaryInput } from "../../uikit/Inputs/Input";
 import classNames from "classnames";
-import { useRocketGame } from "../../../hooks/useRocketGame";
+import { useRocketGameContext } from "../../../contexts/RocketGameContext";
+import { useWindowSize } from "../../../hooks/useWindowSize";
 
 export const HomeGame = () => {
-  const { handleChangeBetAmount, startGame, animationIdRef, showConfetti, currentDuration, handleCashOut, isRunning, crashed, coeff, crashPoint, betAmount, betError} = useRocketGame();
+  const { handleChangeBetAmount, startGame, currentDuration, handleCashOut, isRunning, crashed, coeff, crashPoint, betAmount, betError} = useRocketGameContext();
+  const { isMobile } = useWindowSize();
   const [activeBar, setActiveBar] = useState<string>("Rocket");
 
-  useEffect(() => {
-    return () => {
-      if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
-    };
-  }, []);
-
   const handleChangeBar = (value: string) => setActiveBar(value);
+
+  // Адаптивные размеры кнопок
+  const buttonWidth = isMobile ? "100" : "50";
+  // const secondaryButtonWidth = isMobile ? "100" : "25";
 
   const games = [
     { icon: "🚀", title: "Rocket" },
@@ -75,32 +75,34 @@ export const HomeGame = () => {
           </div>
 
           <div className="home-game__main-controls">
-            <p>Bet Amount</p>
+            <p> Amount</p>
 
             <div className="home-game__main-controls__launch">
               <PrimaryInput
                 placeholderValue={"0.00"}
                 type={"number"}
                 bgColor={"rgba(15, 23, 43, 1)"}
-                widthSize={"50"}
+                widthSize={buttonWidth}
                 inputValue={betAmount}
                 handler={handleChangeBetAmount}
               />
               <PrimaryButton
                 text={isRunning ? "Cashout" : "Launch Rocket"}
-                widthSize={"50"}
+                widthSize={buttonWidth}
                 bgColor1={isRunning ? "rgba(0, 153, 102, 1)" : "rgba(21, 93, 252, 1)"}
                 bgColor2={isRunning ? "rgba(0, 166, 62, 1)" : "rgba(152, 16, 250, 1)"}
                 handler={isRunning ? () => handleCashOut() : () => startGame()}
               />
             </div>
 
-            <p style={{color: 'red', margin: '0'}}>{betError}</p>
+            {betError && (
+              <p style={{color: 'red', margin: '4px 0 0 0', fontSize: '12px'}}>{betError}</p>
+            )}
 
             <div className="home-game__main-controls__additional">
               {["10", "50", "100", "500"].map((num) => {
                 return (
-                  <SecondaryButton key={num} amount={num} widthSize={"25"} />
+                  <SecondaryButton key={num} amount={num} widthSize={"25"} handler={(_, amount) => handleChangeBetAmount(amount)}/>
                 );
               })}
             </div>

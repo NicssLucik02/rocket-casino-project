@@ -1,0 +1,113 @@
+.leaderboard {
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    background-color: var(--background-modal);
+
+    &__container {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+
+        @media (max-width: 768px) {
+            padding: 16px;
+            gap: 24px;
+        }
+
+        @media (max-width: 480px) {
+            padding: 12px;
+            gap: 16px;
+        }
+    }
+
+    &__top {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        align-items: center;
+
+        @media (max-width: 480px) {
+            gap: 8px;
+        }
+
+        &-title {
+            display: flex;
+            flex-direction: column;
+
+            &-text {
+                font-size: 16px;
+                font-weight: 700;
+
+                &--small {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: rgba(202, 213, 226, 1);
+                }
+            }
+        }        
+    }
+
+    &__list {
+        padding: 0;
+        margin: 0;
+    }
+
+    &__item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        margin-bottom: 8px;
+        background-color: rgba(29, 41, 61, 0.5);
+        border-radius: 8px;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        @media (max-width: 480px) {
+            padding: 8px;
+            margin-bottom: 6px;
+        }
+
+        &.current-user {
+            background-color: rgba(21, 93, 252, 0.3);
+            border: 1px solid rgba(21, 93, 252, 0.5);
+        }
+    }
+
+    &__stats {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    &__rank {
+        font-weight: 600;
+        color: rgba(202, 213, 226, 1);
+    }
+
+    &__mid {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__username {
+        color: rgba(202, 213, 226, 1);
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    &__games {
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(202, 213, 226, 1);
+    }
+
+    &__balance {
+        font-weight: 600;
+        background: linear-gradient(to right, rgba(81, 162, 255, 1), rgba(194, 122, 255, 1));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+}

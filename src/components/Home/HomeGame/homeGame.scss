@@ -1,6 +1,10 @@
 .home-game {
     flex-shrink: 0;
     width: 65%;
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
 }
 
 .home-game__tabs {
@@ -12,6 +16,7 @@
     border-radius: 14px;
     padding-inline: 5px;
     gap: 5px;
+    overflow-x: auto;
 }
 
 .home-game__main {
@@ -19,8 +24,20 @@
     border-radius: 14px;
     margin-top: 38px;
     
+    @media (max-width: 768px) {
+        margin-top: 16px;
+    }
+    
     &-container {
         padding: 24px;
+
+        @media (max-width: 768px) {
+            padding: 16px;
+        }
+
+        @media (max-width: 480px) {
+            padding: 12px;
+        }
     }
 
     &-controls {
@@ -31,15 +48,14 @@
             display: flex;
             flex-direction: row;
             gap: 16px;
+
+            @media (max-width: 480px) {
+                flex-direction: column;
+                gap: 12px;
+            }
         }
 
         &__input {
-            width: 50%;
-            height: 36px;
-            border-radius: 8px;
-            padding: 0 0 0 12px;
-            background-color: rgba(15, 23, 43, 1);
-            border: none;
 
             &:focus {
                 outline: solid 1px #e2e2e258;
@@ -50,6 +66,11 @@
             display: flex;
             margin-top: 24px;
             gap: 8px;
+
+
+            @media (max-width: 480px) {
+                margin-top: 12px;
+            }
         }
     }
 }
@@ -60,5 +81,14 @@
     bottom: 40px;
     right: 30%;
     z-index: 3;
+
+    @media (max-width: 768px) {
+        width: 50%;
+    }
+
+    @media (max-width: 480px) {
+        width: 60%;
+        bottom: 20px;
+    }
 }
 

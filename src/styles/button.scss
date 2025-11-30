@@ -1,0 +1,80 @@
+// Shared button styles
+.btn {
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  font-size: 16px;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  img {
+    margin-right: 4px;
+  }
+}
+
+.btn-primary {
+  @extend .btn;
+  background: linear-gradient(
+    to right,
+    rgba(21, 93, 252, 1),
+    rgba(152, 16, 250, 1)
+  );
+  color: white;
+
+  &.disabled {
+    background: linear-gradient(
+      to right,
+      rgba(100, 100, 100, 1),
+      rgba(80, 80, 80, 1)
+    );
+  }
+}
+
+.btn-success {
+  @extend .btn;
+  background: linear-gradient(
+    to right,
+    rgba(0, 153, 102, 1),
+    rgba(0, 166, 62, 1)
+  );
+  color: white;
+
+  &.disabled {
+    background: linear-gradient(
+      to right,
+      rgba(100, 100, 100, 1),
+      rgba(80, 80, 80, 1)
+    );
+  }
+}
+
+.btn-danger {
+  @extend .btn;
+  background: linear-gradient(to right, rgba(212, 24, 61, 1), rgb(126, 9, 32));
+  color: white;
+}
+
+.btn-secondary {
+  @extend .btn;
+  background-color: rgba(15, 23, 43, 0.5);
+  border: 1px solid rgba(49, 65, 88, 1);
+  color: white;
+
+  &:hover {
+    background-color: rgba(15, 23, 43, 0.7);
+  }
+}

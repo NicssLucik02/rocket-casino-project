@@ -1,13 +1,21 @@
 .home-game__main-window {
   position: relative;
   width: 100%;
-  max-width: 800px;
   height: 400px;
   margin: 0 auto;
   overflow: hidden;
   background-color: rgba(26, 29, 40, 1);
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+
+  @media (max-width: 768px) {
+    height: 300px;
+  }
+
+  @media (max-width: 480px) {
+    height: 250px;
+    border-radius: 12px;
+  }
 }
 
 .home-game__main-window .road,
@@ -52,7 +60,17 @@
   font-weight: 900;
   color: #fff;
   text-shadow: 0 0 20px #000;
-  z-index: 20;
+  z-index: 10;
+
+  @media (max-width: 768px) {
+    font-size: 3rem;
+    top: 15px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 2rem;
+    top: 10px;
+  }
 }
 
 .crashed {
@@ -75,6 +93,16 @@
   transform: translateX(-50%);
   width: 220px;
   z-index: 10;
+
+  @media (max-width: 768px) {
+    width: 180px;
+    bottom: 30px;
+  }
+
+  @media (max-width: 480px) {
+    width: 140px;
+    bottom: 20px;
+  }
 }
 
 .road {

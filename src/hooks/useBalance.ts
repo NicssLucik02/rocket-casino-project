@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import { supabase } from "../utils/supabaseClient";
 import { REALTIME_SUBSCRIBE_STATES } from "@supabase/supabase-js";
 
 export const useBalance = () => {
   const [balance, setBalance] = useState<number | null>(null);
   const channelRef = useRef<any>(null);
-  const reconnectTimeoutRef = useRef<number | null>(null);
+  const updateTimeoutRef = useRef<number | null>(null);
 
   const fetchBalance = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -23,59 +23,19 @@ export const useBalance = () => {
     }
 
     if (data?.balance !== undefined) {
-      setBalance(data.balance);
+      setBalance((prev) => {
+        if (prev !== data.balance) {
+          return data.balance;
+        }
+        return prev;
+      });
     }
   }, []);
-
-  const addToBalance = async (amount: number) => {
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) return { success: false, error: "Не авторизован" };
-
-    const { error } = await supabase.rpc('add_balance', { amount: amount });
-
-    if (error) {
-      console.error("Ошибка RPC:", error);
-      return { success: false, error: error.message };
-    }
-
-    // Оптимистическое обновление
-    setBalance((prev) => (prev ?? 0) + amount);
-    // Синхронизация с сервером через небольшую задержку
-    setTimeout(() => fetchBalance(), 500);
-
-    return { success: true };
-  };
-
-  const spendBalance = async (amount: number) => {
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) return { success: false, error: "Не авторизован" };
-
-    const { error } = await supabase.rpc('spend_balance', { amount: amount });
-
-    if (error) {
-      console.error("Ошибка RPC:", error);
-      return { success: false, error: error.message };
-    }
-
-    // Оптимистическое обновление
-    setBalance((prev) => (prev ?? 0) - amount);
-    // Синхронизация с сервером через небольшую задержку
-    setTimeout(() => fetchBalance(), 500);
-
-    return { success: true };
-  };
 
   useEffect(() => {
     let isMounted = true;
 
     const setupRealtime = async () => {
-      // Очищаем предыдущий таймаут реконнекта
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
-        reconnectTimeoutRef.current = null;
-      }
-
-      // Удаляем старый канал, если он существует
       if (channelRef.current) {
         await supabase.removeChannel(channelRef.current);
         channelRef.current = null;
@@ -106,26 +66,22 @@ export const useBalance = () => {
             filter: `id=eq.${user.id}`,
           },
           (payload) => {
-            console.log("Realtime update!", payload.new);
-            if (isMounted) {
-              setBalance(payload.new.balance ?? 0);
+            const newBalance = payload.new.balance ?? 0;
+            if (updateTimeoutRef.current) {
+              clearTimeout(updateTimeoutRef.current);
             }
+            updateTimeoutRef.current = setTimeout(() => {
+              if (isMounted) {
+                setBalance((prev) => (prev !== newBalance ? newBalance : prev));
+              }
+            }, 50) as unknown as number;
           }
         )
-        .subscribe((status, err) => {
-          console.log("Realtime status:", status, err);
-
-          if (status === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
-            console.log("✅ Realtime подписка активна");
-          }
-
+        .subscribe((status) => {
           if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT || 
               status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
             console.warn("⚠️ Realtime соединение потеряно, переподключение...");
-            
-            if (reconnectTimeoutRef.current) return; // Уже в процессе реконнекта
-
-            reconnectTimeoutRef.current = setTimeout(() => {
+            setTimeout(() => {
               if (isMounted) {
                 setupRealtime();
               }
@@ -138,32 +94,56 @@ export const useBalance = () => {
 
     setupRealtime();
 
-    // Периодическая проверка соединения (каждые 30 секунд)
-    const healthCheck = setInterval(() => {
-      if (channelRef.current) {
-        const channel = channelRef.current;
-        // Проверяем состояние канала
-        if (channel.state === 'closed' || channel.state === 'errored') {
-          console.log("Health check: канал неактивен, переподключение...");
-          setupRealtime();
-        }
-      }
-    }, 30000);
-
     return () => {
       isMounted = false;
       
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
       }
       
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
       }
-      
-      clearInterval(healthCheck);
     };
   }, [fetchBalance]);
 
-  return { balance, addToBalance, refreshBalance: fetchBalance, spendBalance };
+  const addToBalance = async (amount: number) => {
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) return { success: false, error: "Не авторизован" };
+
+    const { error } = await supabase.rpc('add_balance', { amount: amount });
+
+    if (error) {
+      console.error("Ошибка RPC:", error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  };
+
+  const addBonus = async() => {
+    const { error } = await supabase.rpc('add_balance', { amount: 10 });
+    if (error) {
+      console.error("Ошибка RPC:", error);
+      return { success: false, error: error.message };
+    }
+    
+    return { success: true };
+  }
+
+  const spendBalance = async (amount: number) => {
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) return { success: false, error: "Не авторизован" };
+
+    const { error } = await supabase.rpc('spend_balance', { amount: amount });
+
+    if (error) {
+      console.error("Ошибка RPC:", error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  };
+
+  return { balance, addToBalance, refreshBalance: fetchBalance, fetchBalance, spendBalance, addBonus };
 };

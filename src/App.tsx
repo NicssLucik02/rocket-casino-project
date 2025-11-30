@@ -1,28 +1,44 @@
-import { Home } from './components/Home/Home'
-import { LoginModule } from './components/LoginModule/LoginModule'
-import { Header } from './components/Header/Header';
-import { SettingsModal } from './components/SettingsModal/SettingsModal';
-import { useState } from 'react';
-import { useAuth } from './hooks/useAuth';
+import { Home } from "./components/Home/Home";
+import { LoginModule } from "./components/LoginModule/LoginModule";
+import { Header } from "./components/Header/Header";
+import { SettingsModal } from "./components/SettingsModal/SettingsModal";
+import { useState } from "react";
+import { useAuth } from "./hooks/useAuth";
+import { RocketGameProvider, useRocketGameContext } from "./contexts/RocketGameContext";
+import { BalanceProvider } from "./contexts/BalanceContext";
+import { BetResultModal } from "./components/Home/HomeGame/BetResultModal/BetResultModal";
 
-function App() {
+function AppContent() {
   const { user, loading } = useAuth();
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const { showBetResultModal, onClose, crashed, betAmount, coeff } = useRocketGameContext();
 
   if (loading) return <div>Loading...</div>;
-
   if (!user) return <LoginModule />;
-  
+
   return (
     <>
-      <Header onSettingsClick={() => setIsSettingsOpen(true)} />
+      <Header onSettingsClick={() => setSettingsOpen(true)} />
       <Home />
-      {isSettingsOpen && (
-        <SettingsModal onClose={() => setIsSettingsOpen(false)} />
+      {settingsOpen && (
+        <SettingsModal onClose={() => setSettingsOpen(false)} />
       )}
 
+      {showBetResultModal && (
+        <BetResultModal onClose={onClose} crashed={crashed} betAmount={betAmount} coeff={coeff}/>
+      )}
     </>
-  )
+  );
 }
 
-export default App
+function App() {
+  return (
+    <BalanceProvider>
+      <RocketGameProvider>
+        <AppContent />
+      </RocketGameProvider>
+    </BalanceProvider>
+  );
+}
+
+export default App;

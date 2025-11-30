@@ -10,3 +10,13 @@ export type FormErrors = {
   username?: string;
   server?: string;
 };
+
+export type LeaderboardEntry = {
+  id: string;
+  username: string | null;
+  balance: number;
+  rank: number;
+  games_played: number;
+  total_won: number;
+  total_wagered: number;
+};

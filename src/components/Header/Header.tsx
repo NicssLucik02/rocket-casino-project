@@ -1,12 +1,15 @@
 
 import { useForm } from '../../hooks/useForm';
 import './header.scss';
-import { useBalance } from '../../hooks/useBalance';
+import { useBalanceContext } from '../../contexts/BalanceContext';
+import { ClipLoader } from 'react-spinners';
 
-export const Header = ({ onSettingsClick }: { onSettingsClick: () => void }) => {
+type Props = {
+    onSettingsClick: () => void 
+}
+export const Header: React.FC<Props> = ({ onSettingsClick}) => {
     const { handleLogout } = useForm();
-    const { balance } = useBalance();
-
+    const { balance } = useBalanceContext();
     return (
         <header className="header">
             <div className="header__title">
@@ -21,7 +24,7 @@ export const Header = ({ onSettingsClick }: { onSettingsClick: () => void }) => 
                       src="/rocket-casino-project/src/assets/icons/Wallet.svg" 
                       alt="wallet" 
                     />
-                        <p>{balance !== null ? `$${balance.toFixed(2)}` : 'Loading...'}</p>
+                        <p>{balance !== null ? `$${balance.toFixed(2)}` : <ClipLoader color="#00bc6eff" size={20} className='spin__header'/>}</p>
                 </div>
                 <div className="header__actions-settings" onClick={onSettingsClick}>
                     <img src="/rocket-casino-project/src/assets/icons/Settings.svg" alt="settings" />

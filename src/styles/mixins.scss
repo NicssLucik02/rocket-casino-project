@@ -1,3 +1,100 @@
+// Breakpoints
+$breakpoint-sm: 480px;   // Small phones
+$breakpoint-md: 768px;   // Tablets
+$breakpoint-lg: 1024px;  // Desktops
+$breakpoint-xl: 1440px;  // Large screens
+
+// Media query mixins
+@mixin mobile {
+  @media (max-width: #{$breakpoint-sm}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: #{$breakpoint-md}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$breakpoint-lg}) {
+    @content;
+  }
+}
+
+@mixin tablet-and-up {
+  @media (min-width: #{$breakpoint-md + 1}) {
+    @content;
+  }
+}
+
+@mixin desktop-and-up {
+  @media (min-width: #{$breakpoint-lg}) {
+    @content;
+  }
+}
+
+// Responsive padding
 @mixin inline-padding {
-    padding-inline: 140px;
+  padding-inline: 140px;
+
+  @include tablet {
+    padding-inline: 24px;
+  }
+
+  @include mobile {
+    padding-inline: 16px;
+  }
+}
+
+@mixin container-padding {
+  padding: 24px;
+
+  @include tablet {
+    padding: 16px;
+  }
+
+  @include mobile {
+    padding: 12px;
+  }
+}
+
+// Responsive font sizes
+@mixin font-responsive($desktop, $tablet, $mobile) {
+  font-size: $desktop;
+
+  @include tablet {
+    font-size: $tablet;
+  }
+
+  @include mobile {
+    font-size: $mobile;
+  }
+}
+
+// Responsive gap
+@mixin gap-responsive($desktop, $tablet, $mobile) {
+  gap: $desktop;
+
+  @include tablet {
+    gap: $tablet;
+  }
+
+  @include mobile {
+    gap: $mobile;
+  }
+}
+
+// Flex direction responsive
+@mixin flex-responsive($desktop: row, $tablet: row, $mobile: column) {
+  flex-direction: $desktop;
+
+  @include tablet {
+    flex-direction: $tablet;
+  }
+
+  @include mobile {
+    flex-direction: $mobile;
+  }
 }
