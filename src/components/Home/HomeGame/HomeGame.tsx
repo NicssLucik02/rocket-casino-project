@@ -7,6 +7,7 @@ import { SecondaryButton } from "../../uikit/Buttons/SecondaryButton";
 import { PrimaryInput } from "../../uikit/Inputs/Input";
 import classNames from "classnames";
 import { useRocketGameContext } from "../../../contexts/RocketGameContext";
+import carImg from "../../../assets/images/car.png";
 import { useWindowSize } from "../../../hooks/useWindowSize";
 
 export const HomeGame = () => {
@@ -65,7 +66,7 @@ export const HomeGame = () => {
             <div className="bg-city" />
             <img
               className="window-icon"
-              src="/rocket-casino-project/src/assets/images/car.png"
+              src={carImg}
               alt="game"
               data-running={isRunning}
             />

@@ -3,6 +3,10 @@ import { useForm } from '../../hooks/useForm';
 import './header.scss';
 import { useBalanceContext } from '../../contexts/BalanceContext';
 import { ClipLoader } from 'react-spinners';
+import logoIcon from '../../assets/icons/Logo.svg';
+import walletIcon from '../../assets/icons/Wallet.svg';
+import settingsIcon from '../../assets/icons/Settings.svg';
+import logoutIcon from '../../assets/icons/Logout.svg';
 
 type Props = {
     onSettingsClick: () => void 
@@ -13,7 +17,7 @@ export const Header: React.FC<Props> = ({ onSettingsClick}) => {
     return (
         <header className="header">
             <div className="header__title">
-                <img src="/rocket-casino-project/src/assets/icons/Logo.svg" alt="logo" />
+                <img src={logoIcon} alt="logo" />
                 Rocket Casino
             </div>
 
@@ -21,19 +25,19 @@ export const Header: React.FC<Props> = ({ onSettingsClick}) => {
                 <div className="header__actions-wallet">
                     <img 
                       className="wallet-icon" 
-                      src="/rocket-casino-project/src/assets/icons/Wallet.svg" 
+                      src={walletIcon} 
                       alt="wallet" 
                     />
                         <p>{balance !== null ? `$${balance.toFixed(2)}` : <ClipLoader color="#00bc6eff" size={20} className='spin__header'/>}</p>
                 </div>
                 <div className="header__actions-settings" onClick={onSettingsClick}>
-                    <img src="/rocket-casino-project/src/assets/icons/Settings.svg" alt="settings" />
+                    <img src={settingsIcon} alt="settings" />
                 </div>
                 
                 <div className="header__actions-logout" onClick={() => handleLogout()}>
                     <img
                       className="logout-icon"
-                      src="/rocket-casino-project/src/assets/icons/Logout.svg" 
+                      src={logoutIcon} 
                       alt="logout" 
                     />
                     Logout

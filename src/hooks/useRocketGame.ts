@@ -11,8 +11,8 @@ export const useRocketGame = () => {
   const [betError, setBetError] = useState<string | null>(null);
   const [showBetResultModal, setShowBetResultModal] = useState<boolean>(false);
 
-  const { addToBalance, spendBalance } = useBalanceContext();
-  const { countGames, getTotalWon, getTotalWag } = useSettings();
+  const { spendBalance } = useBalanceContext();
+  const { getTotalWon, getTotalWag } = useSettings();
 
   const coeffRef = useRef<number>(1.0);
   const hasCashedOutRef = useRef<boolean>(false);

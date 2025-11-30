@@ -5,6 +5,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { LEADERBOARD_CONFIG } from "../../../constants/config";
 import type { LeaderboardEntry } from "../../../types/Types";
 import { LeaderboardItem } from "./LeaderboardItem";
+import leaderboardIcon from "../../../assets/icons/Leaderboard.svg";
 
 export const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
@@ -55,7 +56,7 @@ export const Leaderboard = () => {
     <div className="leaderboard">
       <div className="leaderboard__container">
         <div className="leaderboard__top">
-          <img src="./src/assets/icons/Leaderboard.svg" alt="logo-trophey" />
+          <img src={leaderboardIcon} alt="logo-trophey" />
           <p className="leaderboard__top-title">
             <span className="leaderboard__top-title-text">Leaderboard</span>
             <span className="leaderboard__top-title-text--small">

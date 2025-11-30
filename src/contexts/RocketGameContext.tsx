@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, type ReactNode } from 'react';
 import { useRocketGame } from '../hooks/useRocketGame';
 
 type RocketGameContextType = ReturnType<typeof useRocketGame>;
@@ -22,4 +22,3 @@ export const useRocketGameContext = () => {
   }
   return context;
 };
-

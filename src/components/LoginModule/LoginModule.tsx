@@ -3,6 +3,8 @@ import { PrimaryButton } from '../uikit/Buttons/PrimaryButton';
 import { PrimaryInput } from '../uikit/Inputs/Input';
 import './loginModule.scss';
 import { useForm } from '../../hooks/useForm';
+import rocketLogo from '../../assets/icons/RocketLogo.svg';
+import loginIcon from '../../assets/icons/Login.svg';
 
 export const LoginModule = () => {
   const {formData, handleChange, handleSignup, handleLogin, loginErrors, setLoginErrors} = useForm();
@@ -34,7 +36,7 @@ export const LoginModule = () => {
             <div className="login__container">
               <div className="login__top">
                   <img 
-                    src="/rocket-casino-project/src/assets/icons/RocketLogo.svg" 
+                    src={rocketLogo} 
                     alt="Rocket Logo" 
                   />
                   <p className="login__top-title">Rocket Casino</p>
@@ -106,7 +108,7 @@ export const LoginModule = () => {
                     widthSize={'100'} 
                     bgColor1={'rgba(0, 153, 102, 1)'} 
                     bgColor2={'rgba(21, 93, 252, 1)'}
-                    icon={'/rocket-casino-project/src/assets/icons/Login.svg'}
+                    icon={loginIcon}
                   />
 
                   <p

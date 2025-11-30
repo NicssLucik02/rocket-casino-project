@@ -4,9 +4,9 @@ import { ClipLoader } from "react-spinners";
 import { useBalanceContext } from "../../contexts/BalanceContext";
 import { useSettings } from "../../hooks/useSettings";
 import { UsernameSection } from "./UsernameSection";
+import userIcon from "../../assets/icons/User.svg";
 import { AccountStats } from "./AccountStats";
 import { ModalActions } from "./ModalActions";
-import { SUPABASE_CONFIG, GAME_CONFIG } from "../../constants/index";
 
 type Props = {
   onClose: () => void;
@@ -54,7 +54,7 @@ export const SettingsModal: React.FC<Props> = ({ onClose }) => {
                 </p>
 
                 <UsernameSection
-                  icon="./src/assets/icons/User.svg"
+                  icon={userIcon}
                   label="Username"
                   value={changeUserName}
                   error={userNameError}

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, type ReactNode } from 'react';
 import { useBalance } from '../hooks/useBalance';
 
 type BalanceContextType = ReturnType<typeof useBalance>;
@@ -22,4 +22,3 @@ export const useBalanceContext = () => {
   }
   return context;
 };
-

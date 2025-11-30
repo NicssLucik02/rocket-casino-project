@@ -1,5 +1,7 @@
 import { PrimaryButton } from "../../../uikit/Buttons/PrimaryButton";
 import "./bet-modal.scss";
+import emptyCarImg from "../../../../assets/images/EmptyCar.png";
+import cashoutImg from "../../../../assets/images/cashout.png";
 import classNames from "classnames";
 
 type Props = {
@@ -21,11 +23,7 @@ export const BetResultModal: React.FC<Props> = ({
       <div className="bet-modal">
         <div className="bet-modal__container">
           <img
-            src={
-              crashed
-                ? "./src/assets/images/EmptyCar.png"
-                : "./src/assets/images/cashout.png"
-            }
+            src={crashed ? emptyCarImg : cashoutImg}
             alt="car"
           />
           <p
