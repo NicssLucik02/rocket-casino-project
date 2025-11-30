@@ -1,9 +1,6 @@
-import { createContext, useContext, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useBalance } from '../hooks/useBalance';
-
-type BalanceContextType = ReturnType<typeof useBalance>;
-
-const BalanceContext = createContext<BalanceContextType | undefined>(undefined);
+import { BalanceContext } from './balanceContextBase';
 
 export const BalanceProvider = ({ children }: { children: ReactNode }) => {
   const balanceState = useBalance();
@@ -15,10 +12,4 @@ export const BalanceProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useBalanceContext = () => {
-  const context = useContext(BalanceContext);
-  if (context === undefined) {
-    throw new Error('useBalanceContext must be used within a BalanceProvider');
-  }
-  return context;
-};
+export default BalanceProvider;

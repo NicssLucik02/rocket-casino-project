@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from "react";
-import { useBalanceContext } from "../contexts/BalanceContext";
+import { useBalanceContext } from "../contexts/balanceContextBase";
 import { useSettings } from "./useSettings";
 
 export const useRocketGame = () => {

@@ -1,7 +1,7 @@
 
 import { useForm } from '../../hooks/useForm';
 import './header.scss';
-import { useBalanceContext } from '../../contexts/BalanceContext';
+import { useBalanceContext } from '../../contexts/balanceContextBase';
 import { ClipLoader } from 'react-spinners';
 import logoIcon from '../../assets/icons/Logo.svg';
 import walletIcon from '../../assets/icons/Wallet.svg';

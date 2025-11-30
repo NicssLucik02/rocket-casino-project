@@ -6,7 +6,7 @@ import { PrimaryButton } from "../../uikit/Buttons/PrimaryButton";
 import { SecondaryButton } from "../../uikit/Buttons/SecondaryButton";
 import { PrimaryInput } from "../../uikit/Inputs/Input";
 import classNames from "classnames";
-import { useRocketGameContext } from "../../../contexts/RocketGameContext";
+import { useRocketGameContext } from "../../../contexts/rocketGameContextBase";
 import carImg from "../../../assets/images/car.png";
 import { useWindowSize } from "../../../hooks/useWindowSize";
 

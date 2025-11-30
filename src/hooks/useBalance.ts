@@ -1,11 +1,11 @@
 import { useCallback, useState, useEffect, useRef } from "react";
 import { supabase } from "../utils/supabaseClient";
-import { REALTIME_SUBSCRIBE_STATES } from "@supabase/supabase-js";
+import { REALTIME_SUBSCRIBE_STATES, type RealtimeChannel } from "@supabase/supabase-js";
 
 export const useBalance = () => {
   const [balance, setBalance] = useState<number | null>(null);
-  const channelRef = useRef<any>(null);
-  const updateTimeoutRef = useRef<number | null>(null);
+  const channelRef = useRef<RealtimeChannel | null>(null);
+  const updateTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchBalance = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -74,7 +74,7 @@ export const useBalance = () => {
               if (isMounted) {
                 setBalance((prev) => (prev !== newBalance ? newBalance : prev));
               }
-            }, 50) as unknown as number;
+            }, 50);
           }
         )
         .subscribe((status) => {

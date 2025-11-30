@@ -29,7 +29,7 @@ export const LeaderboardItem: React.FC<Props> = ({ player, isCurrentUser }) => {
           filter: `id=eq.${player.id}`,
         },
         (payload) => {
-          const p: { username?: string; balance?: number; games_played?: number; total_won?: number; total_wagered?: number; games_won?: number } = payload.new as any;
+          const p = payload.new as { username?: string; balance?: number; games_played?: number; total_won?: number; total_wagered?: number; games_won?: number };
           setPlayerState((prev) => ({
             ...prev,
             username: p.username ?? prev.username,

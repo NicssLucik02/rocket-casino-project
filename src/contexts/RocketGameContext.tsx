@@ -1,9 +1,6 @@
-import { createContext, useContext, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useRocketGame } from '../hooks/useRocketGame';
-
-type RocketGameContextType = ReturnType<typeof useRocketGame>;
-
-const RocketGameContext = createContext<RocketGameContextType | undefined>(undefined);
+import { RocketGameContext } from './rocketGameContextBase';
 
 export const RocketGameProvider = ({ children }: { children: ReactNode }) => {
   const gameState = useRocketGame();
@@ -15,10 +12,4 @@ export const RocketGameProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useRocketGameContext = () => {
-  const context = useContext(RocketGameContext);
-  if (context === undefined) {
-    throw new Error('useRocketGameContext must be used within a RocketGameProvider');
-  }
-  return context;
-};
+export default RocketGameProvider;

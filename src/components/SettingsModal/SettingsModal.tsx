@@ -1,7 +1,7 @@
 import "./settingsModal.scss";
 import { X } from "lucide-react";
 import { ClipLoader } from "react-spinners";
-import { useBalanceContext } from "../../contexts/BalanceContext";
+import { useBalanceContext } from "../../contexts/balanceContextBase";
 import { useSettings } from "../../hooks/useSettings";
 import { UsernameSection } from "./UsernameSection";
 import userIcon from "../../assets/icons/User.svg";

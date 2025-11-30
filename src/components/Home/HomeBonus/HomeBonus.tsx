@@ -1,45 +1,33 @@
 import './homeBonus.scss';
 import { PrimaryButton } from "../../uikit/Buttons/PrimaryButton"
-import { useBalanceContext } from '../../../contexts/BalanceContext';
+import { useBalanceContext } from '../../../contexts/balanceContextBase';
 import { useState, useEffect } from 'react';
 import bonusIcon from '../../../assets/icons/Bonus.svg';
 import timeIcon from '../../../assets/icons/Time.svg';
 
 export const HomeBonus = () => {
     const { addBonus } = useBalanceContext();
-    const [timeLeft, setTimeLeft] = useState<number>(0);
-    const [isDisabled, setIsDisabled] = useState<boolean>(false);
-
-    useEffect(() => {
+    const [timeLeft, setTimeLeft] = useState<number>(() => {
         const savedTime = localStorage.getItem('bonusCooldown');
-        if (savedTime) {
-            const endTime = parseInt(savedTime, 10);
-            const now = Date.now();
-            const remaining = Math.max(0, Math.floor((endTime - now) / 1000));
-            
-            if (remaining > 0) {
-                setTimeLeft(remaining);
-                setIsDisabled(true);
-            } else {
-                localStorage.removeItem('bonusCooldown');
-            }
-        }
-    }, []);
+        if (!savedTime) return 0;
+        const endTime = parseInt(savedTime, 10);
+        const now = Date.now();
+        return Math.max(0, Math.floor((endTime - now) / 1000));
+    });
+
+    const isDisabled = timeLeft > 0;
 
     useEffect(() => {
-        if (timeLeft <= 0) {
-            setIsDisabled(false);
-            return;
-        }
+        if (timeLeft <= 0) return;
 
         const timer = setInterval(() => {
             setTimeLeft((prev) => {
-                if (prev <= 1) {
-                    setIsDisabled(false);
+                const next = prev - 1;
+                if (next <= 0) {
                     localStorage.removeItem('bonusCooldown');
                     return 0;
                 }
-                return prev - 1;
+                return next;
             });
         }, 1000);
 
@@ -54,7 +42,6 @@ export const HomeBonus = () => {
         const endTime = Date.now() + 60000;
         localStorage.setItem('bonusCooldown', endTime.toString());
         setTimeLeft(60);
-        setIsDisabled(true);
     };
 
     const formatTime = (seconds: number): string => {
