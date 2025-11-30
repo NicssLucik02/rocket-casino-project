@@ -18,7 +18,7 @@ export const Leaderboard = () => {
         const { data, error } = await supabase
           .from("profiles")
           .select(
-            "id, username, balance, games_played, total_won, total_wagered"
+            "id, username, balance, games_played, total_won, total_wagered, games_won"
           )
           .order("balance", { ascending: false })
           .limit(LEADERBOARD_CONFIG.TOP_PLAYERS_COUNT);

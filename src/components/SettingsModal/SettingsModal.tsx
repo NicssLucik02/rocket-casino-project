@@ -22,6 +22,7 @@ export const SettingsModal: React.FC<Props> = ({ onClose }) => {
     totalWagered,
     handleChangeUserName,
     saveUsername,
+    resetStats,
     loading,
     saveMessage,
     handleClearInput,
@@ -30,6 +31,10 @@ export const SettingsModal: React.FC<Props> = ({ onClose }) => {
   const handleSave = () => {
     saveUsername();
     handleClearInput();
+  };
+
+  const handleReset = () => {
+    resetStats();
   };
 
   return (
@@ -72,7 +77,7 @@ export const SettingsModal: React.FC<Props> = ({ onClose }) => {
 
                 <ModalActions
                   onSave={handleSave}
-                  onReset={() => console.log("Reset account")}
+                  onReset={handleReset}
                 />
               </div>
             </div>

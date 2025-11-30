@@ -11,8 +11,8 @@ export const useRocketGame = () => {
   const [betError, setBetError] = useState<string | null>(null);
   const [showBetResultModal, setShowBetResultModal] = useState<boolean>(false);
 
-  const { spendBalance } = useBalanceContext();
-  const { getTotalWon, getTotalWag } = useSettings();
+  const { spendBalance, balance } = useBalanceContext();
+  const { getTotalWon, getTotalWag, countWonGames, countGames } = useSettings();
 
   const coeffRef = useRef<number>(1.0);
   const hasCashedOutRef = useRef<boolean>(false);
@@ -33,11 +33,16 @@ export const useRocketGame = () => {
     return Math.max(1.1, Math.min(crash, 100));
   };
 
-  const startGame = useCallback(() => {
+  const startGame = useCallback(async () => {
     if (isRunningRef.current) return;
 
     if (betAmount === '' || betAmount.trim() === '') {
       setBetError('Enter Bet Amount');
+      return;
+    }
+
+    if (balance !== null && balance < Number(betAmount)) {
+      setBetError('Insufficient balance');
       return;
     }
 
@@ -48,7 +53,6 @@ export const useRocketGame = () => {
       return;
     }
     
-    // Очищаем ошибку перед запуском игры
     setBetError(null);
 
     if (animationIdRef.current !== null) {
@@ -56,8 +60,17 @@ export const useRocketGame = () => {
       animationIdRef.current = null;
     }
 
-    spendBalance(amount);
+    const result = await spendBalance(amount);
+    console.log('success');
+    
+    if (!result?.success) {
+      setBetError('Insufficient balance');
+      console.log('success');
+      
+      return;
+    }
     getTotalWag(amount);
+    await countGames();
 
     setIsRunning(true);
     setCrashed(false);
@@ -104,11 +117,10 @@ export const useRocketGame = () => {
     };
 
     animationIdRef.current = requestAnimationFrame(tick);
-  }, [betAmount, spendBalance, getTotalWag]);
+  }, [betAmount, spendBalance, getTotalWag, countGames, balance]);
 
   const handleCashOut = async () => {
     if (cashOutInProgressRef.current || !isRunningRef.current || crashedRef.current || hasCashedOutRef.current) return;
-
     cashOutInProgressRef.current = true;
     hasCashedOutRef.current = true;
     isRunningRef.current = false;
@@ -120,9 +132,10 @@ export const useRocketGame = () => {
         cancelAnimationFrame(animationIdRef.current);
         animationIdRef.current = null;
       }
-
+      
       const multiplier = coeffRef.current;
       const reward = Number((Number(betAmount) * multiplier).toFixed(2));
+      await countWonGames();
 
       finalResultRef.current = "cashed";
       finalMultiplierRef.current = multiplier;

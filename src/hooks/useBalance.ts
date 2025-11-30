@@ -135,13 +135,16 @@ export const useBalance = () => {
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) return { success: false, error: "Не авторизован" };
 
-    const { error } = await supabase.rpc('spend_balance', { amount: amount });
+    const { data, error } = await supabase.rpc('spend_balance', { amount: amount });
 
     if (error) {
       console.error("Ошибка RPC:", error);
       return { success: false, error: error.message };
     }
 
+    if (data === false) {
+      return { success: false, error: "Недостаточно средств" };
+    }
     return { success: true };
   };
 

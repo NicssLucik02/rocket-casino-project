@@ -19,7 +19,6 @@ export const HomeGame = () => {
 
   // Адаптивные размеры кнопок
   const buttonWidth = isMobile ? "100" : "50";
-  // const secondaryButtonWidth = isMobile ? "100" : "25";
 
   const games = [
     { icon: "🚀", title: "Rocket" },

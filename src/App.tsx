@@ -7,13 +7,14 @@ import { useAuth } from "./hooks/useAuth";
 import { RocketGameProvider, useRocketGameContext } from "./contexts/RocketGameContext";
 import { BalanceProvider } from "./contexts/BalanceContext";
 import { BetResultModal } from "./components/Home/HomeGame/BetResultModal/BetResultModal";
+import { ClipLoader } from "react-spinners";
 
 function AppContent() {
   const { user, loading } = useAuth();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { showBetResultModal, onClose, crashed, betAmount, coeff } = useRocketGameContext();
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <ClipLoader color="#00bc6eff" size={20} className='spin__header'/>;
   if (!user) return <LoginModule />;
 
   return (

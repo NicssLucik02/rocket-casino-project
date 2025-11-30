@@ -110,4 +110,16 @@
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
+
+    &__average-win {
+        font-size: 12px;
+        font-weight: 500;
+        color: rgba(144, 161, 185, 1);
+    }
+
+    &__end {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
 }

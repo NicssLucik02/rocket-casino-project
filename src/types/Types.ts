@@ -19,4 +19,5 @@ export type LeaderboardEntry = {
   games_played: number;
   total_won: number;
   total_wagered: number;
+  games_won: number;
 };

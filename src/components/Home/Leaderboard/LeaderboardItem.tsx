@@ -29,7 +29,7 @@ export const LeaderboardItem: React.FC<Props> = ({ player, isCurrentUser }) => {
           filter: `id=eq.${player.id}`,
         },
         (payload) => {
-          const p: { username?: string; balance?: number; games_played?: number; total_won?: number; total_wagered?: number } = payload.new as any;
+          const p: { username?: string; balance?: number; games_played?: number; total_won?: number; total_wagered?: number; games_won?: number } = payload.new as any;
           setPlayerState((prev) => ({
             ...prev,
             username: p.username ?? prev.username,
@@ -37,6 +37,7 @@ export const LeaderboardItem: React.FC<Props> = ({ player, isCurrentUser }) => {
             games_played: p.games_played ?? prev.games_played,
             total_won: p.total_won ?? prev.total_won,
             total_wagered: p.total_wagered ?? prev.total_wagered,
+            games_won: p.games_won ?? prev.games_won,
           }));
         }
       )
@@ -46,6 +47,12 @@ export const LeaderboardItem: React.FC<Props> = ({ player, isCurrentUser }) => {
       supabase.removeChannel(channel);
     };
   }, [player.id]);
+
+  console.log(playerState.games_played);
+    console.log(playerState.games_won);
+  
+  const rawWinRate = playerState.games_played ? ((playerState.games_won ?? 0) / playerState.games_played) * 100 : 0;
+  const averageWin = Number.isFinite(rawWinRate) ? Math.max(0, Math.min(100, rawWinRate)) : 0;
 
   return (
     <li
@@ -65,9 +72,12 @@ export const LeaderboardItem: React.FC<Props> = ({ player, isCurrentUser }) => {
         </p>
       </div>
 
-      <p>
+      <p className="leaderboard__end">
         <span className="leaderboard__balance">
           ${playerState.balance?.toFixed(2) || "0.00"}
+        </span>
+        <span className="leaderboard__average-win">
+          {averageWin.toFixed(2) || "0.00"}% win
         </span>
       </p>
     </li>

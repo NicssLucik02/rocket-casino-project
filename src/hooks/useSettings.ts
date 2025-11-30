@@ -7,9 +7,10 @@ export const useSettings = () => {
   const [gamesPlayed, setGamesPlayed] = useState<number>(0);
   const [totalWon, setTotalWon] = useState<number>(0);
   const [totalWagered, setTotalWagered] = useState<number>(0);
+  const [wonGames, setWonGames] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
-
+  
   useEffect(() => {
     const loadProfile = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -17,7 +18,7 @@ export const useSettings = () => {
 
       const { data } = await supabase
         .from("profiles")
-        .select("username, games_played, total_won, total_wagered")
+        .select("username, games_played, total_won, total_wagered, games_won")
         .eq("id", user.id)
         .single();
 
@@ -26,6 +27,7 @@ export const useSettings = () => {
         setGamesPlayed(data.games_played || 0);
         setTotalWon(data.total_won || 0);
         setTotalWagered(data.total_wagered || 0);
+        setWonGames(data.games_won || 0);
       }
     };
 
@@ -43,6 +45,7 @@ export const useSettings = () => {
         setGamesPlayed(p.games_played ?? 0);
         setTotalWon(p.total_won ?? 0);
         setTotalWagered(p.total_wagered ?? 0);
+        setWonGames(p.games_won ?? 0);
         if (p.username) setChangeUserName(p.username);
       })
       .subscribe();
@@ -90,6 +93,42 @@ export const useSettings = () => {
     }
   };
 
+  const resetStats = async () => {
+    setLoading(true);
+    setSaveMessage(null);
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      setLoading(false);
+      setSaveMessage({ text: "Не авторизован", type: "error" });
+      return;
+    }
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({ games_played: 0, total_won: 0, total_wagered: 0, games_won: 0 })
+      .eq("id", user.id);
+
+    setLoading(false);
+
+    if (error) {
+      setSaveMessage({ text: "Ошибка сброса", type: "error" });
+    } else {
+      setSaveMessage({ text: "Stats reset", type: "success" });
+      setGamesPlayed(0);
+      setTotalWon(0);
+      setTotalWagered(0);
+      setWonGames(0);
+      // Confirm server value for diagnostics
+      const { data: confirm } = await supabase
+        .from("profiles")
+        .select("games_won, games_played, total_won, total_wagered")
+        .eq("id", user.id)
+        .single();
+      console.log("resetStats confirm", confirm);
+      setTimeout(() => setSaveMessage(null), 3000);
+    }
+  };
+
   const countGames = async () => {
     await supabase.rpc('increment_games_played');
   };
@@ -102,6 +141,34 @@ export const useSettings = () => {
     await supabase.rpc('add_wager', { amount });
   };
 
+  const countWonGames = async (): Promise<{ success: boolean; error?: string }> => {
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      console.error('increment_wins: no authenticated user', userError);
+      return { success: false, error: 'Не авторизован' };
+    }
+
+    const { data, error } = await supabase.rpc('increment_wins');
+    console.log('increment_wins RPC result', { data, error });
+    if (error) {
+      const { error: updError } = await supabase
+        .from('profiles')
+        .update({ games_won: (wonGames ?? 0) + 1, updated_at: new Date().toISOString() })
+        .eq('id', user.id);
+      if (updError) {
+        console.error('increment_wins fallback update error', updError);
+        return { success: false, error: updError.message };
+      }
+      setWonGames((prev) => (prev ?? 0) + 1);
+      return { success: true };
+    }
+    if (data === true) {
+      setWonGames((prev) => (prev ?? 0) + 1);
+      return { success: true };
+    }
+    return { success: false, error: 'RPC returned false' };
+  }
+
   return {
     changeUserName,
     userNameError,
@@ -110,11 +177,14 @@ export const useSettings = () => {
     totalWagered,
     handleChangeUserName,
     saveUsername,
+    resetStats,
     loading,
     saveMessage,
     countGames,
     getTotalWon,
     getTotalWag,
+    countWonGames,
     handleClearInput,
+    wonGames,
   };
 };
