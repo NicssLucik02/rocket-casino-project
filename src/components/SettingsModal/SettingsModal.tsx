@@ -75,10 +75,7 @@ export const SettingsModal: React.FC<Props> = ({ onClose }) => {
                   totalWon={totalWon}
                 />
 
-                <ModalActions
-                  onSave={handleSave}
-                  onReset={handleReset}
-                />
+                <ModalActions onSave={handleSave} onReset={handleReset} />
               </div>
             </div>
           </>

@@ -6,7 +6,7 @@
   overflow: hidden;
   background-color: rgba(26, 29, 40, 1);
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 
   @media (max-width: 768px) {
     height: 300px;
@@ -39,9 +39,9 @@
   position: absolute;
   left: 0;
   bottom: 120px;
-  width: 300%;  
+  width: 300%;
   height: 320px;
-  background-image: url('../../../assets/images/CityBackground.jpg');
+  background-image: url("../../../assets/images/CityBackground.jpg");
   background-repeat: repeat-x;
   background-position: bottom center;
   background-size: auto 100%;
@@ -74,19 +74,19 @@
 }
 
 .crashed {
-    color: rgba(230, 31, 31, 1);
-    text-shadow: none;
+  color: rgba(230, 31, 31, 1);
+  text-shadow: none;
 
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .cashout {
-    color: rgba(25, 221, 87, 1);
-    text-shadow: none;
-    font-weight: 600;
+  color: rgba(25, 221, 87, 1);
+  text-shadow: none;
+  font-weight: 600;
 }
 
-.window-icon { 
+.window-icon {
   position: absolute;
   left: 50%;
   bottom: 40px;
@@ -121,23 +121,41 @@
   left: 0;
   width: 200%;
   height: 10px;
-  background: repeating-linear-gradient(90deg, transparent, transparent 100px, #fff 100px, #fff 200px);
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 100px,
+    #fff 100px,
+    #fff 200px
+  );
   z-index: 2;
 }
 
 @keyframes move-road {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @keyframes car-bounce {
-  from { transform: translateX(-50%) translateY(0) rotate(0deg); }
-  to   { transform: translateX(-50%) translateY(-10px) rotate(1.5deg); }
+  from {
+    transform: translateX(-50%) translateY(0) rotate(0deg);
+  }
+  to {
+    transform: translateX(-50%) translateY(-10px) rotate(1.5deg);
+  }
 }
 
 @keyframes move-city {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-33.333%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-33.333%);
+  }
 }
 
 .start-button {

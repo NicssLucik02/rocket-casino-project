@@ -22,15 +22,12 @@ export const BetResultModal: React.FC<Props> = ({
     <div className="bet-modal__overlay">
       <div className="bet-modal">
         <div className="bet-modal__container">
-          <img
-            src={crashed ? emptyCarImg : cashoutImg}
-            alt="car"
-          />
+          <img src={crashed ? emptyCarImg : cashoutImg} alt="car" />
           <p
             className={classNames(
               "bet-modal__result",
               { fail: crashed },
-              { win: !crashed }
+              { win: !crashed },
             )}
           >
             ${crashed ? betAmount : reward}

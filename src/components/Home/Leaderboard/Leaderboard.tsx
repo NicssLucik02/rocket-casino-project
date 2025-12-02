@@ -18,13 +18,12 @@ export const Leaderboard = () => {
         const { data, error } = await supabase
           .from("profiles")
           .select(
-            "id, username, balance, games_played, total_won, total_wagered, games_won"
+            "id, username, balance, games_played, total_won, total_wagered, games_won",
           )
           .order("balance", { ascending: false })
           .limit(LEADERBOARD_CONFIG.TOP_PLAYERS_COUNT);
 
         if (error) {
-          console.error("Error loading leaderboard:", error);
           return;
         }
 
@@ -35,8 +34,8 @@ export const Leaderboard = () => {
           })) || [];
 
         setLeaderboard(leaderboardData);
-      } catch (error) {
-        console.error("Error:", error);
+      } catch {
+        void 0;
       } finally {
         setLoading(false);
       }
@@ -46,7 +45,7 @@ export const Leaderboard = () => {
 
     const interval = setInterval(
       loadLeaderboard,
-      LEADERBOARD_CONFIG.REFRESH_INTERVAL_MS
+      LEADERBOARD_CONFIG.REFRESH_INTERVAL_MS,
     );
 
     return () => clearInterval(interval);

@@ -13,21 +13,26 @@ import { ClipLoader } from "react-spinners";
 function AppContent() {
   const { user, loading } = useAuth();
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const { showBetResultModal, onClose, crashed, betAmount, coeff } = useRocketGameContext();
+  const { showBetResultModal, onClose, crashed, betAmount, coeff } =
+    useRocketGameContext();
 
-  if (loading) return <ClipLoader color="#00bc6eff" size={20} className='spin__header'/>;
+  if (loading)
+    return <ClipLoader color="#00bc6eff" size={20} className="spin__header" />;
   if (!user) return <LoginModule />;
 
   return (
     <>
       <Header onSettingsClick={() => setSettingsOpen(true)} />
       <Home />
-      {settingsOpen && (
-        <SettingsModal onClose={() => setSettingsOpen(false)} />
-      )}
+      {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}
 
       {showBetResultModal && (
-        <BetResultModal onClose={onClose} crashed={crashed} betAmount={betAmount} coeff={coeff}/>
+        <BetResultModal
+          onClose={onClose}
+          crashed={crashed}
+          betAmount={betAmount}
+          coeff={coeff}
+        />
       )}
     </>
   );

@@ -1,10 +1,8 @@
-// Breakpoints
-$breakpoint-sm: 480px;   // Small phones
-$breakpoint-md: 768px;   // Tablets
-$breakpoint-lg: 1024px;  // Desktops
-$breakpoint-xl: 1440px;  // Large screens
+$breakpoint-sm: 480px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1440px;
 
-// Media query mixins
 @mixin mobile {
   @media (max-width: #{$breakpoint-sm}) {
     @content;
@@ -35,7 +33,6 @@ $breakpoint-xl: 1440px;  // Large screens
   }
 }
 
-// Responsive padding
 @mixin inline-padding {
   padding-inline: 140px;
 
@@ -60,7 +57,6 @@ $breakpoint-xl: 1440px;  // Large screens
   }
 }
 
-// Responsive font sizes
 @mixin font-responsive($desktop, $tablet, $mobile) {
   font-size: $desktop;
 
@@ -73,7 +69,6 @@ $breakpoint-xl: 1440px;  // Large screens
   }
 }
 
-// Responsive gap
 @mixin gap-responsive($desktop, $tablet, $mobile) {
   gap: $desktop;
 
@@ -86,7 +81,6 @@ $breakpoint-xl: 1440px;  // Large screens
   }
 }
 
-// Flex direction responsive
 @mixin flex-responsive($desktop: row, $tablet: row, $mobile: column) {
   flex-direction: $desktop;
 

@@ -78,8 +78,6 @@
     &--error {
       color: rgba(212, 24, 61, 1);
     }
-
-   
   }
 
   &__input-error {
@@ -89,10 +87,10 @@
     margin: 4px 0 0 0;
   }
 
-   &__input-success {
-        color: rgba(0, 166, 62, 1);
-        font-size: 12px;
-    }
+  &__input-success {
+    color: rgba(0, 166, 62, 1);
+    font-size: 12px;
+  }
   &__panel {
     background-color: rgba(29, 41, 61, 0.5);
     padding: 16px;

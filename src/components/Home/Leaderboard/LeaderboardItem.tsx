@@ -29,7 +29,14 @@ export const LeaderboardItem: React.FC<Props> = ({ player, isCurrentUser }) => {
           filter: `id=eq.${player.id}`,
         },
         (payload) => {
-          const p = payload.new as { username?: string; balance?: number; games_played?: number; total_won?: number; total_wagered?: number; games_won?: number };
+          const p = payload.new as {
+            username?: string;
+            balance?: number;
+            games_played?: number;
+            total_won?: number;
+            total_wagered?: number;
+            games_won?: number;
+          };
           setPlayerState((prev) => ({
             ...prev,
             username: p.username ?? prev.username,
@@ -39,7 +46,7 @@ export const LeaderboardItem: React.FC<Props> = ({ player, isCurrentUser }) => {
             total_wagered: p.total_wagered ?? prev.total_wagered,
             games_won: p.games_won ?? prev.games_won,
           }));
-        }
+        },
       )
       .subscribe();
 
@@ -48,11 +55,12 @@ export const LeaderboardItem: React.FC<Props> = ({ player, isCurrentUser }) => {
     };
   }, [player.id]);
 
-  console.log(playerState.games_played);
-    console.log(playerState.games_won);
-  
-  const rawWinRate = playerState.games_played ? ((playerState.games_won ?? 0) / playerState.games_played) * 100 : 0;
-  const averageWin = Number.isFinite(rawWinRate) ? Math.max(0, Math.min(100, rawWinRate)) : 0;
+  const rawWinRate = playerState.games_played
+    ? ((playerState.games_won ?? 0) / playerState.games_played) * 100
+    : 0;
+  const averageWin = Number.isFinite(rawWinRate)
+    ? Math.max(0, Math.min(100, rawWinRate))
+    : 0;
 
   return (
     <li
