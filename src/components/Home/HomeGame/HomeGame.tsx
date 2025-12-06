@@ -1,11 +1,13 @@
-import "./homeGame.scss";
-import "./gameAnimations.scss";
+import styles from "./homeGame.module.scss";
 import { GameBar } from "../../uikit/Gamebar/GameBar";
 import { useState } from "react";
-import { RocketGame } from "../Games/RocketGame";
+import { RocketGame } from "../Games/RocketGame/RocketGame";
 import { useSearchParams } from "react-router-dom";
 import { CaseOpenerGame } from "../Games/CaseOpenerGame/CaseOpenerGame";
 import { useRocketGameContext } from "../../../contexts/rocketGameContextBase";
+import { games } from "../../../constants/games";
+import { GameTypes } from "../../../types/enums";
+import { RocketIcon } from "lucide-react";
 
 export const HomeGame = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,26 +15,16 @@ export const HomeGame = () => {
   const [isCaseOpening, setIsCaseOpening] = useState(false);
 
   const activeBar = searchParams.get("game");
-      console.log(activeBar);
-  const getActiveBar = () => {
-    return activeBar === "Rocket" || activeBar === "Cases"
-      ? activeBar
-      : "Rocket";
-  };
+
   const handleChangeBar = (value: string) => {
     const lockActive = isRunning || isCaseOpening;
     if (lockActive) return;
     setSearchParams({ game: value });
   };
 
-  const games = [
-    { icon: "🚀", title: "Rocket" },
-    { icon: "📦", title: "Cases" },
-  ];
-
   return (
-    <div className="home-game">
-      <div className="home-game__tabs">
+    <div className={styles["home-game"]}>
+      <div className={styles["home-game__tabs"]}>
         {games.map((game) => {
           return (
             <GameBar
@@ -40,24 +32,24 @@ export const HomeGame = () => {
               icon={game.icon}
               title={game.title}
               handleChangeBar={handleChangeBar}
-              activeBar={getActiveBar()}
+              activeBar={activeBar}
               disabled={isRunning || isCaseOpening}
             />
           );
         })}
       </div>
 
-      
-      <div className="home-game__main">
-        <div className="home-game__main-container">
+      <div className={styles["home-game__main"]}>
+        <div className={styles["home-game__main-container"]}>
           {activeBar === null && (
-            <div className="home-game__main-stub">
+            <div className={styles["home-game__main-stub"]}>
               <p className="home-game__main-stub-text">Please Select a Game</p>
+              <RocketIcon className={styles["home-game__main-stub-icon"]} />
             </div>
           )}
-          
-          {activeBar === "Rocket" && <RocketGame />}
-          {activeBar === "Cases" && (
+
+          {activeBar === GameTypes.Rocket && <RocketGame />}
+          {activeBar === GameTypes.CaseOpener && (
             <CaseOpenerGame onOpeningChange={setIsCaseOpening} />
           )}
         </div>

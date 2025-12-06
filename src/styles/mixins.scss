@@ -1,6 +1,6 @@
 $breakpoint-sm: 480px;
 $breakpoint-md: 768px;
-$breakpoint-lg: 1024px;
+$breakpoint-lg: 1200px;
 $breakpoint-xl: 1440px;
 
 @mixin mobile {
@@ -34,7 +34,11 @@ $breakpoint-xl: 1440px;
 }
 
 @mixin inline-padding {
-  padding-inline: 140px;
+  padding-inline: 40px;
+
+  @include desktop {
+    padding-inline: 140px;
+  }
 
   @include tablet {
     padding-inline: 24px;

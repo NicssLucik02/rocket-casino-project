@@ -1,84 +1,143 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabaseClient";
 
 export const useSettings = () => {
-  const [changeUserName, setChangeUserName] = useState<string>("");
-  const [userNameError, setUserNameError] = useState<string>("");
-  const [gamesPlayed, setGamesPlayed] = useState<number>(0);
-  const [totalWon, setTotalWon] = useState<number>(0);
-  const [totalWagered, setTotalWagered] = useState<number>(0);
-  const [wonGames, setWonGames] = useState<number>(0);
+  const [changeUserName, setChangeUserName] = useState("");
+  const [userNameError, setUserNameError] = useState("");
+  const [gamesPlayed, setGamesPlayed] = useState(0);
+  const [totalWon, setTotalWon] = useState(0);
+  const [totalWagered, setTotalWagered] = useState(0);
+  const [wonGames, setWonGames] = useState(0);
   const [loading, setLoading] = useState(false);
+
   const [saveMessage, setSaveMessage] = useState<{
     text: string;
     type: "success" | "error";
   } | null>(null);
 
-  useEffect(() => {
-    const loadProfile = async () => {
+  const channelRef = useRef<RealtimeChannel | null>(null);
+
+  const loadProfile = async () => {
+    try {
+      setLoading(true);
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .select("username, games_played, total_won, total_wagered, games_won")
         .eq("id", user.id)
         .single();
 
-      if (data) {
-        setChangeUserName(data.username || "");
-        setGamesPlayed(data.games_played || 0);
-        setTotalWon(data.total_won || 0);
-        setTotalWagered(data.total_wagered || 0);
-        setWonGames(data.games_won || 0);
+      if (!error && data) {
+        setChangeUserName(data.username ?? "");
+        setGamesPlayed(data.games_played ?? 0);
+        setTotalWon(data.total_won ?? 0);
+        setTotalWagered(data.total_wagered ?? 0);
+        setWonGames(data.games_won ?? 0);
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    loadProfile();
+  const setupChannel = async (userId: string) => {
+    if (channelRef.current) {
+      await supabase.removeChannel(channelRef.current);
+      channelRef.current = null;
+    }
 
     const channel = supabase
-      .channel("profile-changes")
+      .channel(`profile-changes-${userId}`)
       .on(
         "postgres_changes",
         {
           event: "UPDATE",
           schema: "public",
           table: "profiles",
-          filter: `id=eq.${supabase.auth.getUser().then((r) => r.data.user?.id)}`,
+          filter: `id=eq.${userId}`,
         },
         (payload) => {
           const p = payload.new;
+
           setGamesPlayed(p.games_played ?? 0);
           setTotalWon(p.total_won ?? 0);
           setTotalWagered(p.total_wagered ?? 0);
           setWonGames(p.games_won ?? 0);
-          if (p.username) setChangeUserName(p.username);
+          if (p.username !== undefined) {
+            setChangeUserName(p.username);
+          }
         },
       )
       .subscribe();
 
+    channelRef.current = channel;
+  };
+
+  useEffect(() => {
+    const init = async () => {
+      const { data } = await supabase.auth.getSession();
+      const user = data.session?.user;
+      if (!user) return;
+
+      await setupChannel(user.id);
+      await loadProfile();
+    };
+
+    init();
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        const userId = session?.user?.id;
+
+        if (!userId) {
+          if (channelRef.current) {
+            await supabase.removeChannel(channelRef.current);
+            channelRef.current = null;
+          }
+          return;
+        }
+
+        await setupChannel(userId);
+        await loadProfile();
+      },
+    );
+
     return () => {
-      supabase.removeChannel(channel);
+      listener.subscription.unsubscribe();
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
     };
   }, []);
 
-  const handleClearInput = () => {
-    setChangeUserName("");
-  };
+  useEffect(() => {
+    const handleVisibility = async () => {
+      if (document.visibilityState !== "visible") return;
+      const { data } = await supabase.auth.getSession();
+      const userId = data.session?.user?.id;
+      if (!userId) return;
+      await setupChannel(userId);
+      await loadProfile();
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibility);
+  }, []);
+
+  const handleClearInput = () => setChangeUserName("");
 
   const handleChangeUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setChangeUserName(value);
+    const v = e.target.value;
+    setChangeUserName(v);
 
-    if (value.length > 20) {
-      setUserNameError("Username cannot exceed 20 characters");
-    } else if (value.trim() === "") {
-      setUserNameError("Username cannot be empty");
-    } else {
-      setUserNameError("");
-    }
+    if (v.length > 20) setUserNameError("Username cannot exceed 20 characters");
+    else if (!v.trim()) setUserNameError("Username cannot be empty");
+    else setUserNameError("");
   };
 
   const saveUsername = async () => {
@@ -87,10 +146,18 @@ export const useSettings = () => {
     setLoading(true);
     setSaveMessage(null);
 
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
     const { error } = await supabase
       .from("profiles")
       .update({ username: changeUserName.trim() })
-      .eq("id", (await supabase.auth.getUser()).data.user?.id);
+      .eq("id", user.id);
 
     setLoading(false);
 
@@ -101,26 +168,30 @@ export const useSettings = () => {
       });
     } else {
       setSaveMessage({ text: "Username saved!", type: "success" });
-      setTimeout(() => setSaveMessage(null), 3000);
+      setTimeout(() => setSaveMessage(null), 2500);
     }
   };
 
   const resetStats = async () => {
     setLoading(true);
     setSaveMessage(null);
+
     const {
       data: { user },
-      error: userError,
     } = await supabase.auth.getUser();
-    if (userError || !user) {
+    if (!user) {
       setLoading(false);
-      setSaveMessage({ text: "Не авторизован", type: "error" });
-      return;
+      return setSaveMessage({ text: "Не авторизован", type: "error" });
     }
 
     const { error } = await supabase
       .from("profiles")
-      .update({ games_played: 0, total_won: 0, total_wagered: 0, games_won: 0 })
+      .update({
+        games_played: 0,
+        total_won: 0,
+        total_wagered: 0,
+        games_won: 0,
+      })
       .eq("id", user.id);
 
     setLoading(false);
@@ -129,11 +200,7 @@ export const useSettings = () => {
       setSaveMessage({ text: "Ошибка сброса", type: "error" });
     } else {
       setSaveMessage({ text: "Stats reset", type: "success" });
-      setGamesPlayed(0);
-      setTotalWon(0);
-      setTotalWagered(0);
-      setWonGames(0);
-      setTimeout(() => setSaveMessage(null), 3000);
+      setTimeout(() => setSaveMessage(null), 2500);
     }
   };
 
@@ -149,37 +216,27 @@ export const useSettings = () => {
     await supabase.rpc("add_wager", { amount });
   };
 
-  const countWonGames = async (): Promise<{
-    success: boolean;
-    error?: string;
-  }> => {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return { success: false, error: "Не авторизован" };
-    }
-
+  const countWonGames = async () => {
     const { data, error } = await supabase.rpc("increment_wins");
+
     if (error) {
-      const { error: updError } = await supabase
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return { success: false };
+
+      await supabase
         .from("profiles")
         .update({
-          games_won: (wonGames ?? 0) + 1,
+          games_won: wonGames + 1,
           updated_at: new Date().toISOString(),
         })
         .eq("id", user.id);
-      if (updError) {
-        return { success: false, error: updError.message };
-      }
-      setWonGames((prev) => (prev ?? 0) + 1);
+
       return { success: true };
     }
-    if (data === true) {
-      setWonGames((prev) => (prev ?? 0) + 1);
-      return { success: true };
-    }
+
+    if (data === true) return { success: true };
     return { success: false, error: "RPC returned false" };
   };
 
@@ -189,16 +246,18 @@ export const useSettings = () => {
     gamesPlayed,
     totalWon,
     totalWagered,
-    handleChangeUserName,
-    saveUsername,
-    resetStats,
+    wonGames,
     loading,
     saveMessage,
+
+    handleChangeUserName,
+    handleClearInput,
+    saveUsername,
+    resetStats,
+
     countGames,
     getTotalWon,
     getTotalWag,
     countWonGames,
-    handleClearInput,
-    wonGames,
   };
 };

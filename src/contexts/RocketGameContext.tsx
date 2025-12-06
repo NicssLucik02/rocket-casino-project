@@ -2,7 +2,9 @@ import type { ReactNode } from "react";
 import { useRocketGame } from "../hooks/useRocketGame";
 import { RocketGameContext } from "./rocketGameContextBase";
 
-export const RocketGameProvider = ({ children }: { children: ReactNode }) => {
+type Props = { children: ReactNode };
+
+export const RocketGameProvider: React.FC<Props> = ({ children }) => {
   const gameState = useRocketGame();
 
   return (

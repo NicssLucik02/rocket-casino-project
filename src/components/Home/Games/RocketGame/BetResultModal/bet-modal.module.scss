@@ -1,3 +1,5 @@
+@use "../../../../../styles/mixins.scss" as *;
+
 .bet-modal__overlay {
   position: fixed;
   top: 0;
@@ -22,12 +24,12 @@
   z-index: 12;
   overflow-y: auto;
 
-  @media (max-width: 768px) {
+  @include tablet {
     width: 60%;
     max-height: 80vh;
   }
 
-  @media (max-width: 480px) {
+  @include mobile {
     width: 90%;
     max-height: 95vh;
   }
@@ -37,13 +39,20 @@
     display: flex;
     flex-direction: column;
     gap: 30px;
+    text-align: center;
   }
 
   &__result {
-    font-size: 50px;
-    font-weight: 700;
     position: absolute;
-    left: 35%;
+    font-size: 40px;
+    font-weight: 700;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    @include tablet {
+      font-size: 30px;
+    }
   }
 }
 
@@ -70,21 +79,4 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-}
-
-.bet-modal__item-card {
-  width: 160px;
-  height: 200px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 56px;
-  font-weight: 700;
-  color: var(--color-white);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-}
-
-.bet-modal__item-meta {
-  text-align: center;
 }

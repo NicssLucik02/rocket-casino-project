@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { PrimaryButton } from "../uikit/Buttons/PrimaryButton";
+import { PrimaryButton } from "../uikit/Buttons/PrimaryButton/PrimaryButton";
 import { PrimaryInput } from "../uikit/Inputs/Input";
-import "./loginModule.scss";
+import styles from "./loginModule.module.scss";
 import { useForm } from "../../hooks/useForm";
-import rocketLogo from "../../assets/icons/RocketLogo.svg";
-import loginIcon from "../../assets/icons/Login.svg";
+import RocketLogo from "../../assets/icons/RocketLogo.svg?react";
+import LoginIcon from "../../assets/icons/Login.svg?react";
 
 export const LoginModule = () => {
   const {
@@ -38,19 +38,19 @@ export const LoginModule = () => {
   };
 
   return (
-    <div className="wrapper">
-      <section className="login">
-        <div className="login__container">
-          <div className="login__top">
-            <img src={rocketLogo} alt="Rocket Logo" />
-            <p className="login__top-title">Rocket Casino</p>
-            <p className="login__top-subtitle">Welcome Back</p>
+    <div className={styles["wrapper"]}>
+      <section className={styles["login"]}>
+        <div className={styles["login__container"]}>
+          <div className={styles["login__top"]}>
+            <RocketLogo className={styles["login__top-logo"]} />
+            <p className={styles["login__top-title"]}>Rocket Casino</p>
+            <p className={styles["login__top-subtitle"]}>Welcome Back</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="login__forms">
+          <form onSubmit={handleSubmit} className={styles["login__forms"]}>
             {mode === "signup" && (
               <div>
-                <p className="login__input-text">Username</p>
+                <p className={styles["login__input-text"]}>Username</p>
                 <PrimaryInput
                   name={"username"}
                   placeholderValue={"Enter Username"}
@@ -61,13 +61,15 @@ export const LoginModule = () => {
                   handler={handleChange}
                 />
                 {loginErrors.username && (
-                  <p className="login__error">{loginErrors.username}</p>
+                  <p className={styles["login__error"]}>
+                    {loginErrors.username}
+                  </p>
                 )}
               </div>
             )}
 
             <div>
-              <p className="login__input-text">Email</p>
+              <p className={styles["login__input-text"]}>Email</p>
               <PrimaryInput
                 name={"email"}
                 placeholderValue={"Enter Email"}
@@ -78,12 +80,12 @@ export const LoginModule = () => {
                 handler={handleChange}
               />
               {loginErrors.email && (
-                <p className="login__error">{loginErrors.email}</p>
+                <p className={styles["login__error"]}>{loginErrors.email}</p>
               )}
             </div>
 
             <div>
-              <p className="login__input-text">Password</p>
+              <p className={styles["login__input-text"]}>Password</p>
               <PrimaryInput
                 name={"password"}
                 placeholderValue={"Enter Password"}
@@ -94,7 +96,7 @@ export const LoginModule = () => {
                 handler={handleChange}
               />
               {loginErrors.password && (
-                <p className="login__error">{loginErrors.password}</p>
+                <p className={styles["login__error"]}>{loginErrors.password}</p>
               )}
             </div>
 
@@ -103,21 +105,21 @@ export const LoginModule = () => {
               widthSize={"100"}
               bgColor1={"rgba(0, 153, 102, 1)"}
               bgColor2={"rgba(21, 93, 252, 1)"}
-              icon={loginIcon}
+              Icon={LoginIcon}
             />
 
-            <p className="login__reg" onClick={changeAuthMode}>
+            <p className={styles["login__reg"]} onClick={changeAuthMode}>
               {mode === "login"
                 ? `Don't have an account? Register`
                 : "Already have account"}
             </p>
             {loginErrors.server && (
-              <p className="login__error">{loginErrors.server}</p>
+              <p className={styles["login__error"]}>{loginErrors.server}</p>
             )}
           </form>
 
-          <div className="login__divider" />
-          <p className="login__subtext">
+          <div className={styles["login__divider"]} />
+          <p className={styles["login__subtext"]}>
             Your account data is stored locally in your browser
           </p>
         </div>

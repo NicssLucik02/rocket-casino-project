@@ -1,180 +1,169 @@
 import { useCallback, useState, useEffect, useRef } from "react";
 import { supabase } from "../utils/supabaseClient";
-import {
-  REALTIME_SUBSCRIBE_STATES,
-  type RealtimeChannel,
-} from "@supabase/supabase-js";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 
 export const useBalance = () => {
   const [balance, setBalance] = useState<number | null>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
-  const updateTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const mountedRef = useRef(true);
 
-  const fetchBalance = useCallback(async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+  const setupRealtimeChannel = useCallback((userId: string) => {
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current);
+      channelRef.current = null;
+    }
 
+    const channel = supabase
+      .channel(`profile-${userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "profiles",
+          filter: `id=eq.${userId}`,
+        },
+        (payload) => {
+          const newBalance = payload.new.balance as number;
+          setBalance((prev) => (prev !== newBalance ? newBalance : prev));
+        },
+      )
+      .subscribe();
+
+    channelRef.current = channel;
+  }, []);
+
+  const loadBalance = useCallback(async (userId: string) => {
     const { data, error } = await supabase
       .from("profiles")
       .select("balance")
-      .eq("id", user.id)
-      .single();
+      .eq("id", userId)
+      .maybeSingle();
 
     if (error) {
+      setBalance((prev) => (prev === null ? 0 : prev));
       return;
     }
 
-    if (data?.balance !== undefined) {
-      setBalance((prev) => {
-        if (prev !== data.balance) {
-          return data.balance;
-        }
-        return prev;
-      });
+    if (!data) {
+      const { error: insertError } = await supabase
+        .from("profiles")
+        .insert({
+          id: userId,
+          balance: 0,
+          username: "",
+        })
+        .select()
+        .single();
+      if (insertError) {
+        setBalance((prev) => (prev === null ? 0 : prev));
+        return;
+      }
+      setBalance(0);
+    } else {
+      setBalance(data.balance ?? 0);
     }
   }, []);
 
   useEffect(() => {
-    let isMounted = true;
+    mountedRef.current = true;
 
-    const ensureChannelForUser = async (userId: string) => {
-      if (channelRef.current) {
-        await supabase.removeChannel(channelRef.current);
-        channelRef.current = null;
-      }
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        void event;
+        const userId = session?.user?.id;
 
-      await fetchBalance();
-
-      if (!isMounted) return;
-
-      const channel = supabase
-        .channel(`profile-${userId}`, {
-          config: { broadcast: { self: false }, presence: { key: "" } },
-        })
-        .on(
-          "postgres_changes",
-          { event: "UPDATE", schema: "public", table: "profiles", filter: `id=eq.${userId}` },
-          (payload) => {
-            const newBalance = payload.new.balance ?? 0;
-            if (updateTimeoutRef.current) {
-              clearTimeout(updateTimeoutRef.current);
-            }
-            updateTimeoutRef.current = setTimeout(() => {
-              if (isMounted) {
-                setBalance((prev) => (prev !== newBalance ? newBalance : prev));
-              }
-            }, 50);
-          },
-        )
-        .subscribe((status) => {
-          if (
-            status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT ||
-            status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR
-          ) {
-            setTimeout(async () => {
-              if (!isMounted) return;
-              if (channelRef.current) {
-                await supabase.removeChannel(channelRef.current);
-                channelRef.current = null;
-              }
-              await ensureChannelForUser(userId);
-            }, 2000);
+        if (!userId || !mountedRef.current) {
+          setBalance(null);
+          if (channelRef.current) {
+            supabase.removeChannel(channelRef.current);
+            channelRef.current = null;
           }
-        });
-
-      channelRef.current = channel;
-    };
-
-    const init = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user?.id) {
-        await ensureChannelForUser(user.id);
-      } else {
-        setBalance(null);
-      }
-    };
-
-    init();
-
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      const u = session?.user?.id;
-      if (!u) {
-        if (channelRef.current) {
-          await supabase.removeChannel(channelRef.current);
-          channelRef.current = null;
+          return;
         }
-        setBalance(null);
-        return;
+
+        await loadBalance(userId);
+        setupRealtimeChannel(userId);
+      },
+    );
+
+    supabase.auth.getSession().then(({ data }) => {
+      const userId = data.session?.user?.id;
+      if (userId && mountedRef.current) {
+        loadBalance(userId);
+        setupRealtimeChannel(userId);
       }
-      await ensureChannelForUser(u);
     });
 
     return () => {
-      isMounted = false;
-      listener.subscription.unsubscribe();
-      if (updateTimeoutRef.current) {
-        clearTimeout(updateTimeoutRef.current);
-      }
+      mountedRef.current = false;
+      authListener.subscription.unsubscribe();
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
-        channelRef.current = null;
       }
     };
-  }, [fetchBalance]);
+  }, [loadBalance, setupRealtimeChannel]);
 
-  
+  useEffect(() => {
+    const handleVisibility = async () => {
+      if (document.visibilityState !== "visible") return;
+      const { data } = await supabase.auth.getSession();
+      const userId = data.session?.user?.id;
+      if (userId && mountedRef.current) {
+        await loadBalance(userId);
+        setupRealtimeChannel(userId);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibility);
+  }, [loadBalance, setupRealtimeChannel]);
+
+  const refreshBalance = useCallback(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      const userId = data.session?.user?.id;
+      if (userId) {
+        loadBalance(userId);
+      }
+    });
+  }, [loadBalance]);
 
   const addToBalance = async (amount: number) => {
     const {
       data: { user },
-      error: userError,
     } = await supabase.auth.getUser();
-    if (userError || !user) return { success: false, error: "Не авторизован" };
+    if (!user) return { success: false, error: "Не авторизован" };
 
-    const { error } = await supabase.rpc("add_balance", { amount: amount });
+    const { error } = await supabase.rpc("add_balance", {
+      amount: Math.floor(Number(amount)),
+    });
 
     if (error) {
       return { success: false, error: error.message };
     }
 
-    return { success: true };
-  };
-
-  const addBonus = async () => {
-    const { error } = await supabase.rpc("add_balance", { amount: 10 });
-    if (error) {
-      return { success: false, error: error.message };
-    }
-
+    refreshBalance();
     return { success: true };
   };
 
   const spendBalance = async (amount: number) => {
     const {
       data: { user },
-      error: userError,
     } = await supabase.auth.getUser();
-    if (userError || !user) return { success: false, error: "Не авторизован" };
+    if (!user) return { success: false, error: "Не авторизован" };
 
-    const { data, error } = await supabase.rpc("spend_balance", {
-      amount: amount,
-    });
-
-    if (error) {
-      return { success: false, error: error.message };
-    }
-
-    if (data === false) {
-      return { success: false, error: "Недостаточно средств" };
-    }
+    const { error } = await supabase.rpc("spend_balance", { amount });
+    if (error) return { success: false, error: error.message };
+    refreshBalance();
     return { success: true };
   };
 
+  const addBonus = () => addToBalance(10);
+
   return {
     balance,
+    refreshBalance,
     addToBalance,
-    refreshBalance: fetchBalance,
-    fetchBalance,
     spendBalance,
     addBonus,
   };

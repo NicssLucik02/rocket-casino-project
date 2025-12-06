@@ -29,7 +29,7 @@ export const useForm = () => {
   const handleSignup = async () => {
     if (!formValidation(true, formData, setLoginErrors)) return;
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
       options: {
@@ -42,6 +42,29 @@ export const useForm = () => {
     if (error) {
       setLoginErrors({ server: error.message });
       return;
+    }
+
+    const userId = data.user?.id;
+    if (userId) {
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .insert({
+          id: userId,
+          username: formData.username,
+          balance: 0,
+          games_played: 0,
+          total_won: 0,
+          total_wagered: 0,
+          games_won: 0,
+          updated_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
+
+      if (profileError && profileError.code !== "23505") {
+        setLoginErrors({ server: profileError.message });
+        return;
+      }
     }
 
     setFormData({ username: "", email: "", password: "" });

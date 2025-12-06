@@ -1,4 +1,5 @@
-import { PrimaryButton } from "../uikit/Buttons/PrimaryButton";
+import { PrimaryButton } from "../uikit/Buttons/PrimaryButton/PrimaryButton";
+import styles from "./settingsModal.module.scss";
 
 type Props = {
   onSave: () => void;
@@ -6,7 +7,7 @@ type Props = {
 };
 
 export const ModalActions: React.FC<Props> = ({ onSave, onReset }) => (
-  <div className="settings-modal__actions">
+  <div className={styles["settings-modal__actions"]}>
     <PrimaryButton
       text="Save Changes"
       widthSize="50"

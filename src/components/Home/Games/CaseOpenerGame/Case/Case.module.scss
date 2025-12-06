@@ -1,8 +1,8 @@
 @use "../../../../../styles/mixins.scss" as *;
 
 .case {
-      flex: 1 1 calc(25% - 12px);
   width: 25%;
+  min-width: 120px;
   height: 138px;
   border: 1px solid rgba(49, 65, 88, 1);
   background-color: rgba(49, 65, 88, 1);
@@ -13,7 +13,6 @@
     width: 48%;
     flex: 1 1 calc(50% - 8px);
   }
-
 
   &:hover {
     background-color: rgba(69, 85, 108, 1);
@@ -42,8 +41,14 @@
     font-size: 16px;
     font-weight: 700;
     margin: 0;
+    text-align: center;
+
+    @include tablet {
+      font-size: 14px;
+    }
+
     @include mobile {
-      font-size: 15px;
+      font-size: 12px;
     }
   }
 

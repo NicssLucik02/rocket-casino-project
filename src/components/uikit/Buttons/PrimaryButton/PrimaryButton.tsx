@@ -1,9 +1,12 @@
+import styles from "./primaryButton.module.scss";
+
 type Props = {
   text: string;
   widthSize: string;
   bgColor1: string;
   bgColor2: string;
   icon?: string;
+  Icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   handler?: () => void;
   disabled?: boolean;
 };
@@ -14,6 +17,7 @@ export const PrimaryButton: React.FC<Props> = ({
   bgColor1,
   bgColor2,
   icon,
+  Icon,
   handler,
   disabled,
 }) => {
@@ -21,20 +25,17 @@ export const PrimaryButton: React.FC<Props> = ({
     <button
       onClick={handler}
       disabled={disabled}
+      className={styles["primary-button"]}
       style={{
-        height: "36px",
-        width: `${widthSize}%`,
         background: `linear-gradient(to right, ${bgColor1}, ${bgColor2})`,
-        borderRadius: "8px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        border: "none",
-        cursor: disabled ? "not-allowed" : "pointer",
-        opacity: disabled ? 0.6 : 1,
+        width: `${widthSize}%`,
       }}
     >
-      {icon && <img src={icon} style={{ marginRight: "4px" }} alt="icon" />}
+      {Icon ? (
+        <Icon className={styles.icon} />
+      ) : icon ? (
+        <img src={icon} className={styles.icon} alt="icon" />
+      ) : null}
       {text}
     </button>
   );

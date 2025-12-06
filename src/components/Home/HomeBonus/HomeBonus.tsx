@@ -1,9 +1,9 @@
-import "./homeBonus.scss";
-import { PrimaryButton } from "../../uikit/Buttons/PrimaryButton";
+import styles from "./homeBonus.module.scss";
+import { PrimaryButton } from "../../uikit/Buttons/PrimaryButton/PrimaryButton";
 import { useBalanceContext } from "../../../contexts/balanceContextBase";
 import { useState, useEffect } from "react";
-import bonusIcon from "../../../assets/icons/Bonus.svg";
-import timeIcon from "../../../assets/icons/Time.svg";
+import BonusIcon from "../../../assets/icons/Bonus.svg?react";
+import TimeIcon from "../../../assets/icons/Time.svg?react";
 
 export const HomeBonus = () => {
   const { addBonus } = useBalanceContext();
@@ -51,28 +51,32 @@ export const HomeBonus = () => {
   };
 
   return (
-    <div className="home-bonus">
-      <div className="home-bonus__container">
-        <div className="home-bonus__title">
-          <img src={bonusIcon} alt="bonus" />
+    <div className={styles["home-bonus"]}>
+      <div className={styles["home-bonus__container"]}>
+        <div className={styles["home-bonus__title"]}>
+          <BonusIcon className={styles["home-bonus__title-icon"]} />
           <div>
-            <p className="home-bonus__title-text">Claim Bonus</p>
-            <p className="home-bonus__title-text--small">
+            <p className={styles["home-bonus__title-text"]}>Claim Bonus</p>
+            <p className={styles["home-bonus__title-text--small"]}>
               Free money every minute
             </p>
           </div>
         </div>
-        <div className="home-bonus__panel">
-          <p className="home-bonus__panel-item">
+        <div className={styles["home-bonus__panel"]}>
+          <p className={styles["home-bonus__panel-item"]}>
             <span>Next claim:</span>
-            <span className="home-bonus__panel-item__time">
-              <img src={timeIcon} alt="clock" className="bonus-time-icon" />
+            <span className={styles["home-bonus__panel-item__time"]}>
+              <TimeIcon
+                className={styles["home-bonus__panel-item__time-icon"]}
+              />
               {timeLeft > 0 ? formatTime(timeLeft) : "1:00"}
             </span>
           </p>
-          <p className="home-bonus__panel-item">
+          <p className={styles["home-bonus__panel-item"]}>
             <span>Amount:</span>
-            <span className="home-bonus__panel-item__reward">$10</span>
+            <span className={styles["home-bonus__panel-item__reward"]}>
+              $10
+            </span>
           </p>
         </div>
         <PrimaryButton

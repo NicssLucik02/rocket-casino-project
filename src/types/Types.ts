@@ -47,3 +47,12 @@ export type CaseType = {
   icon: string; // картинка кейса
   items: CaseItem[]; // весь пул предметов
 };
+
+export type ProfileRow = {
+  username?: string;
+  balance?: number;
+  games_played?: number;
+  total_won?: number;
+  total_wagered?: number;
+  games_won?: number;
+};

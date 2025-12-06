@@ -1,7 +1,8 @@
 import { PrimaryInput } from "../uikit/Inputs/Input";
+import styles from "./settingsModal.module.scss";
 
 type Props = {
-  icon: string;
+  Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   label: string;
   value: string;
   error?: string;
@@ -11,7 +12,7 @@ type Props = {
 };
 
 export const UsernameSection: React.FC<Props> = ({
-  icon,
+  Icon,
   label,
   value,
   error,
@@ -20,8 +21,8 @@ export const UsernameSection: React.FC<Props> = ({
   onChange,
 }) => (
   <div>
-    <p className="settings-modal__input-text">
-      <img src={icon} alt={label.toLowerCase()} />
+    <p className={styles["settings-modal__input-text"]}>
+      <Icon width={16} height={16} />
       {label}
     </p>
     <PrimaryInput
@@ -32,13 +33,15 @@ export const UsernameSection: React.FC<Props> = ({
       handler={onChange}
     />
     <p
-      className={`settings-modal__input-ch-counter ${error ? "settings-modal__input-ch-counter--error" : ""}`}
+      className={`${styles["settings-modal__input-ch-counter"]} ${error ? styles["settings-modal__input-ch-counter--error"] : ""}`}
     >
       {value.length} / {charLimit} characters
     </p>
-    {error && <p className="settings-modal__input-error">{error}</p>}
+    {error && <p className={styles["settings-modal__input-error"]}>{error}</p>}
     {successMessage?.type && (
-      <p className="settings-modal__input-success">{successMessage.text}</p>
+      <p className={styles["settings-modal__input-success"]}>
+        {successMessage.text}
+      </p>
     )}
   </div>
 );

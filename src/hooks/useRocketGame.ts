@@ -1,6 +1,8 @@
 import { useRef, useState, useCallback } from "react";
 import { useBalanceContext } from "../contexts/balanceContextBase";
 import { useSettings } from "./useSettings";
+import { formatNumber } from "../utils/utils";
+import { supabase } from "../utils/supabaseClient";
 
 export const useRocketGame = () => {
   const [isRunning, setIsRunning] = useState(false);
@@ -11,15 +13,18 @@ export const useRocketGame = () => {
   const [betError, setBetError] = useState<string | null>(null);
   const [showBetResultModal, setShowBetResultModal] = useState<boolean>(false);
 
-  const { spendBalance, balance } = useBalanceContext();
+  const { spendBalance, addToBalance, balance } = useBalanceContext();
   const { getTotalWon, getTotalWag, countWonGames, countGames } = useSettings();
 
   const coeffRef = useRef<number>(1.0);
   const hasCashedOutRef = useRef<boolean>(false);
+  const creditedRef = useRef<boolean>(false);
   const crashedRef = useRef<boolean>(false);
   const finalResultRef = useRef<"cashed" | "crashed" | null>(null);
   const finalMultiplierRef = useRef<number>(0);
   const cashOutInProgressRef = useRef<boolean>(false);
+  const preBalanceRef = useRef<number | null>(null);
+  const lastBetAmountRef = useRef<number>(0);
 
   const startTimeRef = useRef<number>(0);
   const animationIdRef = useRef<number | null>(null);
@@ -74,6 +79,23 @@ export const useRocketGame = () => {
     }
     getTotalWag(amount);
     await countGames();
+    lastBetAmountRef.current = amount;
+
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user?.id) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("balance")
+          .eq("id", user.id)
+          .single();
+        preBalanceRef.current = data?.balance ?? null;
+      }
+    } catch {
+      preBalanceRef.current = balance;
+    }
 
     setIsRunning(true);
     setCrashed(false);
@@ -81,6 +103,7 @@ export const useRocketGame = () => {
     coeffRef.current = 1.0;
     crashedRef.current = false;
     hasCashedOutRef.current = false;
+    creditedRef.current = false;
     cashOutInProgressRef.current = false;
     finalResultRef.current = null;
     isRunningRef.current = true;
@@ -95,13 +118,13 @@ export const useRocketGame = () => {
 
       const elapsed = (now - startTimeRef.current) / 1000;
       const raw = Math.exp(elapsed * 0.15);
-      const rounded = Number(raw.toFixed(2));
+      const rounded = Number(formatNumber(raw));
 
       coeffRef.current = rounded;
       setCoeff(rounded);
 
       if (raw >= crashPointRef.current) {
-        const final = Number(crashPointRef.current.toFixed(2));
+        const final = Number(formatNumber(crashPointRef.current));
         coeffRef.current = final;
         setCoeff(final);
         setCrashed(true);
@@ -144,14 +167,40 @@ export const useRocketGame = () => {
       }
 
       const multiplier = coeffRef.current;
-      const reward = Number((Number(betAmount) * multiplier).toFixed(2));
+      const rewardCents = Math.round(Number(betAmount) * multiplier * 100);
+      const reward = rewardCents / 100;
       await countWonGames();
 
       finalResultRef.current = "cashed";
       finalMultiplierRef.current = multiplier;
 
-      if (reward > 0) {
+      if (reward > 0 && !creditedRef.current) {
+        creditedRef.current = true;
         await getTotalWon(reward);
+
+        try {
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          if (user?.id) {
+            const { data } = await supabase
+              .from("profiles")
+              .select("balance")
+              .eq("id", user.id)
+              .single();
+            const serverBalance = data?.balance ?? null;
+            const expected =
+              (preBalanceRef.current ?? 0) - lastBetAmountRef.current + reward;
+            const epsilon = 0.001;
+            if (serverBalance === null || serverBalance < expected - epsilon) {
+              await addToBalance(reward);
+            }
+          } else {
+            await addToBalance(reward);
+          }
+        } catch {
+          await addToBalance(reward);
+        }
       }
     } finally {
       cashOutInProgressRef.current = false;

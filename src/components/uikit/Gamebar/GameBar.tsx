@@ -1,11 +1,11 @@
-import "./gamebar.scss";
+import styles from "./gamebar.module.scss";
 import classNames from "classnames";
 
 type Props = {
   icon: string;
   title: string;
   handleChangeBar: (value: string) => void;
-  activeBar?: string;
+  activeBar?: string | null;
   disabled?: boolean;
 };
 
@@ -16,16 +16,18 @@ export const GameBar: React.FC<Props> = ({
   activeBar,
   disabled,
 }) => {
+  const handleClick = () => {
+    if (disabled) return;
+    handleChangeBar(title);
+  };
+
   return (
     <div
-      className={classNames("gamebar", {
-        "active-bar": activeBar === title,
-        "gamebar--disabled": !!disabled,
+      className={classNames(styles["gamebar"], {
+        [styles["active-bar"]]: activeBar === title,
+        [styles["gamebar--disabled"]]: !!disabled,
       })}
-      onClick={() => {
-        if (disabled) return;
-        handleChangeBar(title);
-      }}
+      onClick={handleClick}
     >
       <p>{icon}</p>
       <p>{title}</p>

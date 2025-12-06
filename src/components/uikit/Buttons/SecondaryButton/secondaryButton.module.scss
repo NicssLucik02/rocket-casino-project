@@ -1,0 +1,17 @@
+.secondary-button {
+  height: 36px;
+  background-color: rgba(15, 23, 43, 0.5);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(49, 65, 88, 1);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.secondary-button:hover {
+  background-color: rgba(15, 23, 43, 0.7);
+}

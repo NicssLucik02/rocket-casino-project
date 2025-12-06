@@ -1,7 +1,9 @@
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { supabase } from "../../../utils/supabaseClient";
-import type { LeaderboardEntry } from "../../../types/Types";
+import type { LeaderboardEntry, ProfileRow } from "../../../types/Types";
+import styles from "./leaderboard.module.scss";
+import type { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 
 type Props = {
   player: LeaderboardEntry;
@@ -10,6 +12,8 @@ type Props = {
 
 export const LeaderboardItem: React.FC<Props> = ({ player, isCurrentUser }) => {
   const [playerState, setPlayerState] = useState<LeaderboardEntry>(player);
+  const formattedStat = (value: number | undefined) =>
+    value?.toFixed(2) || "0.00";
 
   useEffect(() => {
     setPlayerState(player);
@@ -28,15 +32,8 @@ export const LeaderboardItem: React.FC<Props> = ({ player, isCurrentUser }) => {
           table: "profiles",
           filter: `id=eq.${player.id}`,
         },
-        (payload) => {
-          const p = payload.new as {
-            username?: string;
-            balance?: number;
-            games_played?: number;
-            total_won?: number;
-            total_wagered?: number;
-            games_won?: number;
-          };
+        (payload: RealtimePostgresChangesPayload<ProfileRow>) => {
+          const p = payload.new as Partial<ProfileRow>;
           setPlayerState((prev) => ({
             ...prev,
             username: p.username ?? prev.username,
@@ -64,28 +61,28 @@ export const LeaderboardItem: React.FC<Props> = ({ player, isCurrentUser }) => {
 
   return (
     <li
-      className={classNames("leaderboard__item", {
-        "current-user": isCurrentUser,
+      className={classNames(styles["leaderboard__item"], {
+        [styles["current-user"]]: isCurrentUser,
       })}
     >
-      <div className="leaderboard__stats">
-        <span className="leaderboard__rank">#{playerState.rank}</span>
-        <p className="leaderboard__mid">
-          <span className="leaderboard__username">
+      <div className={styles["leaderboard__stats"]}>
+        <span className={styles["leaderboard__rank"]}>#{playerState.rank}</span>
+        <p className={styles["leaderboard__mid"]}>
+          <span className={styles["leaderboard__username"]}>
             {playerState.username || "Anonymous"}
           </span>
-          <span className="leaderboard__games">
+          <span className={styles["leaderboard__games"]}>
             {playerState.games_played} games
           </span>
         </p>
       </div>
 
-      <p className="leaderboard__end">
-        <span className="leaderboard__balance">
-          ${playerState.balance?.toFixed(2) || "0.00"}
+      <p className={styles["leaderboard__end"]}>
+        <span className={styles["leaderboard__balance"]}>
+          ${formattedStat(playerState.balance)}
         </span>
-        <span className="leaderboard__average-win">
-          {averageWin.toFixed(2) || "0.00"}% win
+        <span className={styles["leaderboard__average-win"]}>
+          {formattedStat(averageWin)}% win
         </span>
       </p>
     </li>

@@ -1,3 +1,5 @@
+@use "../../../styles/mixins.scss" as *;
+
 .home-game__main-window {
   position: relative;
   width: 100%;
@@ -8,11 +10,11 @@
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 
-  @media (max-width: 768px) {
+  @include tablet {
     height: 300px;
   }
 
-  @media (max-width: 480px) {
+  @include mobile {
     height: 250px;
     border-radius: 12px;
   }
@@ -62,12 +64,12 @@
   text-shadow: 0 0 20px #000;
   z-index: 10;
 
-  @media (max-width: 768px) {
+  @include tablet {
     font-size: 3rem;
     top: 15px;
   }
 
-  @media (max-width: 480px) {
+  @include mobile {
     font-size: 2rem;
     top: 10px;
   }
@@ -76,7 +78,6 @@
 .crashed {
   color: rgba(230, 31, 31, 1);
   text-shadow: none;
-
   font-weight: 600;
 }
 
@@ -94,12 +95,12 @@
   width: 220px;
   z-index: 10;
 
-  @media (max-width: 768px) {
+  @include tablet {
     width: 180px;
     bottom: 30px;
   }
 
-  @media (max-width: 480px) {
+  @include mobile {
     width: 140px;
     bottom: 20px;
   }
@@ -156,23 +157,4 @@
   to {
     transform: translateX(-33.333%);
   }
-}
-
-.start-button {
-  display: block;
-  margin: 20px auto;
-  padding: 16px 48px;
-  font-size: 2rem;
-  font-weight: bold;
-  background: #00ff41;
-  color: #000;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  box-shadow: 0 8px 0 #00cc33;
-}
-.start-button:disabled {
-  background: #666;
-  box-shadow: 0 4px 0 #444;
-  cursor: not-allowed;
 }

@@ -1,4 +1,5 @@
-import type { CaseItem } from "../types/Types";
+import { caseItemsRarities } from "../constants/caseItemsRarity";
+import type { CaseItem, Rarity } from "../types/Types";
 
 export const getGradient = (item: CaseItem) => {
   if (item.color1 && item.color2) {
@@ -19,5 +20,31 @@ export const getGradient = (item: CaseItem) => {
       return "linear-gradient(to right, rgba(240, 177, 0, 1), rgba(225, 113, 0, 1))";
     default:
       return "linear-gradient(to right, rgba(69, 85, 108, 1), rgba(49, 65, 88, 1))";
+  }
+};
+
+export const rarityGradients = caseItemsRarities.reduce(
+  (acc, r) => {
+    acc[r.rarity.toLowerCase() as Rarity] = r.gradient;
+    return acc;
+  },
+  {} as Record<Rarity, string>,
+);
+
+export const handleResize = (
+  containerRef: React.RefObject<HTMLDivElement | null>,
+  itemRefs: React.RefObject<(HTMLDivElement | null)[]>,
+  wonIndex: number,
+  setTargetX: (x: number) => void,
+) => {
+  const container = containerRef.current;
+  const winnerEl = itemRefs.current[wonIndex] ?? null;
+  if (container && winnerEl) {
+    const cRect = container.getBoundingClientRect();
+    const iRect = winnerEl.getBoundingClientRect();
+    const containerCenter = cRect.left + cRect.width / 2;
+    const itemCenter = iRect.left + iRect.width / 2;
+    const dx = containerCenter - itemCenter;
+    setTargetX(dx);
   }
 };
