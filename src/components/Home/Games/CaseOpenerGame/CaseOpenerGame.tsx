@@ -7,17 +7,16 @@ import { PrimaryButton } from "../../../uikit/Buttons/PrimaryButton/PrimaryButto
 import type {
   CaseItem as CaseItemType,
   CaseType,
+  RarityInfo,
 } from "../../../../types/Types";
 import BoxIcon from "../../../../assets/icons/Box.svg?react";
 import { CaseItem } from "./Case/CaseItem";
 import { CaseOpeningAnimation } from "./CaseOpenerAnimation";
 import { CaseBetResult } from "./CaseBetResult/CaseBetResult";
-import {
-  caseItemsRarities,
-  type RarityInfo,
-} from "../../../../constants/caseItemsRarity";
+import { caseItemsRarities } from "../../../../constants/caseItemsRarity";
 import { useCaseOpenerGame } from "../../../../hooks/useCaseOpenerGame";
 import { useSettings } from "../../../../hooks/useSettings";
+import { COLORS } from "../../../../constants";
 
 type Props = { onOpeningChange?: (opening: boolean) => void };
 
@@ -89,8 +88,8 @@ export const CaseOpenerGame: React.FC<Props> = ({ onOpeningChange }) => {
               : "Select a Case"
           }
           widthSize={"100"}
-          bgColor1={"rgba(0, 166, 62, 1)"}
-          bgColor2={"rgba(0, 153, 102, 1)"}
+          bgColor1={COLORS.SUCCESS_GRADIENT.to}
+          bgColor2={COLORS.SUCCESS_GRADIENT.from}
           Icon={BoxIcon}
           disabled={!currentCase || isOpening}
           handler={openCase}

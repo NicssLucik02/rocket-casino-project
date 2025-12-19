@@ -1,5 +1,6 @@
 import { useCallback, useState, useEffect, useRef } from "react";
 import { supabase } from "../utils/supabaseClient";
+import { GAME_CONFIG } from "../constants";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
 export const useBalance = () => {
@@ -158,7 +159,7 @@ export const useBalance = () => {
     return { success: true };
   };
 
-  const addBonus = () => addToBalance(10);
+  const addBonus = () => addToBalance(GAME_CONFIG.BONUS_AMOUNT);
 
   return {
     balance,

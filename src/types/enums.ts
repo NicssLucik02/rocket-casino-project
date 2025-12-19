@@ -1,4 +1,4 @@
-export enum RaritiesTypes {
+export enum RarityTypes {
   Common = "Common",
   Uncommon = "Uncommon",
   Rare = "Rare",
@@ -10,4 +10,12 @@ export enum RaritiesTypes {
 export enum GameTypes {
   Rocket = "Rocket",
   CaseOpener = "Cases",
+  Mines = "Mines",
+}
+
+export enum GameStatus {
+  Idle = "idle",
+  Playing = "playing",
+  Win = "win",
+  Lost = "lost",
 }

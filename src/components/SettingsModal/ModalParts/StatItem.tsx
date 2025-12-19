@@ -1,4 +1,4 @@
-import styles from "./settingsModal.module.scss";
+import styles from "../settingsModal.module.scss";
 
 type Props = {
   label: string;

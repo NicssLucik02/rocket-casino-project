@@ -1,11 +1,18 @@
+@import "../../../styles/mixins.scss";
+
 .gamebar {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100px;
   height: 38px;
-  gap: 2px;
+  gap: 6px;
   cursor: pointer;
+
+  @include mobile {
+    width: 80px;
+    height: 36px;
+  }
 }
 
 .active-bar {

@@ -8,6 +8,7 @@ import { useRocketGameContext } from "../../../contexts/rocketGameContextBase";
 import { games } from "../../../constants/games";
 import { GameTypes } from "../../../types/enums";
 import { RocketIcon } from "lucide-react";
+import { MinesGame } from "../Games/MinesGame/MinesGame";
 
 export const HomeGame = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -52,6 +53,7 @@ export const HomeGame = () => {
           {activeBar === GameTypes.CaseOpener && (
             <CaseOpenerGame onOpeningChange={setIsCaseOpening} />
           )}
+          {activeBar === GameTypes.Mines && <MinesGame />}
         </div>
       </div>
     </div>

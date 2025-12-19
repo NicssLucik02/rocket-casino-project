@@ -1,0 +1,12 @@
+@import "../../../../styles/mixins.scss";
+
+.minesGame {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  height: auto;
+
+  @include desktop {
+    flex-direction: column;
+  }
+}

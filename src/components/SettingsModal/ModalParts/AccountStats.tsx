@@ -1,5 +1,5 @@
 import { StatItem } from "./StatItem";
-import styles from "./settingsModal.module.scss";
+import styles from "../settingsModal.module.scss";
 type Props = {
   balance: number | null;
   gamesPlayed: number;

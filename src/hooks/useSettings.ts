@@ -241,6 +241,12 @@ export const useSettings = () => {
   };
 
   return {
+    countGames,
+    getTotalWon,
+    getTotalWag,
+    countWonGames,
+    resetStats,
+    saveUsername,
     changeUserName,
     userNameError,
     gamesPlayed,
@@ -249,15 +255,7 @@ export const useSettings = () => {
     wonGames,
     loading,
     saveMessage,
-
-    handleChangeUserName,
     handleClearInput,
-    saveUsername,
-    resetStats,
-
-    countGames,
-    getTotalWon,
-    getTotalWag,
-    countWonGames,
+    handleChangeUserName,
   };
 };

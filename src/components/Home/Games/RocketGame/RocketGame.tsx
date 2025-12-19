@@ -8,6 +8,7 @@ import { useWindowSize } from "../../../../hooks/useWindowSize";
 import { formatNumber } from "../../../../utils/utils";
 import stylesAnimations from "../../HomeGame/gameAnimations.module.scss";
 import stylesHomeGame from "../../HomeGame/homeGame.module.scss";
+import { COLORS, GAME_CONFIG } from "../../../../constants";
 
 export const RocketGame = () => {
   const {
@@ -66,7 +67,7 @@ export const RocketGame = () => {
           <PrimaryInput
             placeholderValue={"0.00"}
             type={"number"}
-            bgColor={"rgba(15, 23, 43, 1)"}
+            bgColor={COLORS.BACKGROUND_DARK}
             widthSize={buttonWidth}
             inputValue={betAmount}
             handler={handleChangeBetAmount}
@@ -78,20 +79,25 @@ export const RocketGame = () => {
             text={isRunning ? "Cashout" : "Launch Rocket"}
             widthSize={buttonWidth}
             bgColor1={
-              isRunning ? "rgba(0, 153, 102, 1)" : "rgba(21, 93, 252, 1)"
+              isRunning
+                ? COLORS.SUCCESS_GRADIENT.from
+                : COLORS.PRIMARY_GRADIENT.from
             }
             bgColor2={
-              isRunning ? "rgba(0, 166, 62, 1)" : "rgba(152, 16, 250, 1)"
+              isRunning
+                ? COLORS.SUCCESS_GRADIENT.to
+                : COLORS.PRIMARY_GRADIENT.to
             }
             handler={handlePrimaryButtonClick}
             disabled={!isRunning && (!!betError || !betAmount)}
           />
         </div>
         <div className={stylesHomeGame["home-game__main-controls__additional"]}>
-          {[10, 50, 100, 500].map((num) => (
+          {GAME_CONFIG.QUICK_BET_AMOUNTS.map((num) => (
             <SecondaryButton
               key={num}
               amount={num}
+              symbol="$"
               widthSize={"25"}
               handler={(_, amount) => handleChangeBetAmount(amount)}
             />

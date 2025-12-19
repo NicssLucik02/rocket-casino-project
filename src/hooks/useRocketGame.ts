@@ -1,7 +1,7 @@
 import { useRef, useState, useCallback } from "react";
 import { useBalanceContext } from "../contexts/balanceContextBase";
 import { useSettings } from "./useSettings";
-import { formatNumber } from "../utils/utils";
+import { formatNumber, isValidBetAmount } from "../utils/utils";
 import { supabase } from "../utils/supabaseClient";
 
 export const useRocketGame = () => {
@@ -210,8 +210,11 @@ export const useRocketGame = () => {
   const handleChangeBetAmount = useCallback(
     (e: React.ChangeEvent<HTMLInputElement> | string) => {
       const value = typeof e === "string" ? e : e.target.value;
-      setBetAmount(value);
-      if (betError) setBetError(null);
+
+      if (isValidBetAmount(value)) {
+        setBetAmount(value);
+        if (betError) setBetError(null);
+      }
     },
     [betError],
   );

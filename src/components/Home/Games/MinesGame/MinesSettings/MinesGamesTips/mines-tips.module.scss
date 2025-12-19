@@ -1,0 +1,33 @@
+.mines-tips {
+  width: 100%;
+  border-radius: 10px;
+  background: linear-gradient(to bottom right, var(--info-gradient));
+
+  &__list {
+    margin: 0;
+    padding: 0 0 0 15px;
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 17px;
+  }
+
+  &__title {
+    color: rgba(142, 197, 255, 1);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    margin: 0;
+  }
+
+  &__item {
+    color: rgba(202, 213, 226, 1);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 24px;
+    margin: 0;
+  }
+}

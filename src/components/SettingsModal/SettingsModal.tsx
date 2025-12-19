@@ -2,10 +2,13 @@ import styles from "./settingsModal.module.scss";
 import { X } from "lucide-react";
 import { ClipLoader } from "react-spinners";
 import { useBalanceContext } from "../../contexts/balanceContextBase";
-import { UsernameSection } from "./UsernameSection";
+import { UsernameSection } from "./ModalParts/UsernameSection";
+import { ModalActions } from "./ModalParts/ModalActions";
+
 import UserIcon from "../../assets/icons/User.svg?react";
-import { AccountStats } from "./AccountStats";
-import { ModalActions } from "./ModalActions";
+
+import { GAME_CONFIG, SUPABASE_CONFIG } from "../../constants";
+import { AccountStats } from "./ModalParts/AccountStats";
 
 type Props = {
   onClose: () => void;
@@ -53,7 +56,11 @@ export const SettingsModal: React.FC<Props> = ({
 
       <div className={styles["settings-modal"]}>
         {loading ? (
-          <ClipLoader color="#0013bcff" size={70} className={styles["spin"]} />
+          <ClipLoader
+            color={SUPABASE_CONFIG.SPINNER_COLOR}
+            size={SUPABASE_CONFIG.SPINNER_SIZE}
+            className={styles["spin"]}
+          />
         ) : (
           <>
             <X
@@ -75,7 +82,7 @@ export const SettingsModal: React.FC<Props> = ({
                   label="Username"
                   value={changeUserName}
                   error={userNameError}
-                  charLimit={20}
+                  charLimit={GAME_CONFIG.MAX_USERNAME_LENGTH}
                   successMessage={saveMessage}
                   onChange={handleChangeUserName}
                 />

@@ -65,7 +65,7 @@
         rgba(89, 22, 139, 0.3)
       );
       cursor: pointer;
-      
+
       @include tablet {
         height: 38px;
         width: 100px;
@@ -174,7 +174,7 @@
 
 .logout-icon {
   margin-left: 11px;
-  
+
   @include tablet {
     margin-left: 0;
   }

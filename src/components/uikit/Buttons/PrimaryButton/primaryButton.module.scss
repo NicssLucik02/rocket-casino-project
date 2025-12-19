@@ -8,6 +8,10 @@
   justify-content: center;
   border: none;
   cursor: pointer;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
 }
 
 .primary-button:disabled {

@@ -1,3 +1,7 @@
+import styles from "./input.module.scss";
+import classNames from "classnames";
+import { COLORS } from "../../../constants";
+
 type Props = {
   placeholderValue: string;
   type: string;
@@ -5,34 +9,34 @@ type Props = {
   widthSize: string;
   inputValue?: string | number;
   name?: string;
-  handler: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  isDisabled?: boolean;
 };
 
 export const PrimaryInput: React.FC<Props> = ({
   placeholderValue,
   type,
-  bgColor = "rgba(29, 41, 61, 1)",
+  bgColor = COLORS.BACKGROUND_CARD,
   widthSize,
   inputValue,
   handler,
   name,
+  isDisabled,
 }) => {
   return (
     <input
       type={type}
       name={name}
-      className="home-game__main-controls__input"
+      className={classNames(styles["primary-input"], {
+        [styles["disabled"]]: isDisabled,
+      })}
       placeholder={placeholderValue}
       value={inputValue}
       onChange={handler}
+      disabled={isDisabled}
       style={{
-        boxSizing: "border-box",
         width: `${widthSize}%`,
-        height: "36px",
-        borderRadius: "8px",
-        padding: "0 0 0 12px",
         backgroundColor: `${bgColor}`,
-        border: "none",
       }}
     />
   );

@@ -206,7 +206,6 @@
     justify-content: center;
     border-radius: 4px;
 
-
     @include tablet {
       width: 16%;
       height: 50px;
@@ -217,8 +216,8 @@
     }
 
     &-icon {
-        font-size: 18px;
-        
+      font-size: 18px;
+
       @include tablet {
         font-size: 16px;
       }

@@ -1,5 +1,5 @@
-import { PrimaryButton } from "../uikit/Buttons/PrimaryButton/PrimaryButton";
-import styles from "./settingsModal.module.scss";
+import { PrimaryButton } from "../../uikit/Buttons/PrimaryButton/PrimaryButton";
+import styles from "../settingsModal.module.scss";
 
 type Props = {
   onSave: () => void;

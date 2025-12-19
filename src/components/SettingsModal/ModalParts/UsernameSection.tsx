@@ -1,5 +1,5 @@
-import { PrimaryInput } from "../uikit/Inputs/Input";
-import styles from "./settingsModal.module.scss";
+import { PrimaryInput } from "../../uikit/Inputs/Input";
+import styles from "../settingsModal.module.scss";
 
 type Props = {
   Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;

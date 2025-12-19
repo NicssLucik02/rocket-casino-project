@@ -4,7 +4,7 @@ import { useCaseOpener } from "../../../../hooks/useAnimationCaseOpener";
 import { motion, AnimatePresence } from "framer-motion";
 import type { CaseItem, Rarity } from "../../../../types/Types";
 import { caseItemsRarities } from "../../../../constants/caseItemsRarity";
-import { RaritiesTypes } from "../../../../types/enums";
+import { RarityTypes } from "../../../../types/enums";
 
 type Props = {
   items: CaseItem[];
@@ -91,7 +91,7 @@ export const CaseOpeningAnimation: React.FC<Props> = ({
               <AnimatePresence>
                 {isWinner &&
                   item.rarity.toLowerCase() ===
-                    RaritiesTypes.Gold.toLowerCase() && (
+                    RarityTypes.Gold.toLowerCase() && (
                     <motion.div
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: [0, 1, 0], scale: [0.8, 1.6, 2] }}

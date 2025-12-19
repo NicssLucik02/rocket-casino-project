@@ -69,16 +69,30 @@ export const Header: React.FC<Props> = ({ onSettingsClick }) => {
             <div className={styles["header__menu-item"]}>
               <WalletIcon className={styles["wallet-icon"]} />
               <span>
-                {balance !== null ? `$${formatNumber(balance)}` : (
+                {balance !== null ? (
+                  `$${formatNumber(balance)}`
+                ) : (
                   <ClipLoader color="#00bc6eff" size={16} />
                 )}
               </span>
             </div>
-            <div className={styles["header__menu-item"]} onClick={() => { closeMenu(); onSettingsClick(); }}>
+            <div
+              className={styles["header__menu-item"]}
+              onClick={() => {
+                closeMenu();
+                onSettingsClick();
+              }}
+            >
               <SettingsIcon className={styles["settings-icon"]} />
               <span>Settings</span>
             </div>
-            <div className={styles["header__menu-item"]} onClick={() => { closeMenu(); handleLogout(); }}>
+            <div
+              className={styles["header__menu-item"]}
+              onClick={() => {
+                closeMenu();
+                handleLogout();
+              }}
+            >
               <LogoutIcon className={styles["logout-icon"]} />
               <span>Logout</span>
             </div>

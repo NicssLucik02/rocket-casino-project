@@ -1,6 +1,6 @@
 $breakpoint-sm: 480px;
-$breakpoint-md: 768px;
-$breakpoint-lg: 1200px;
+$breakpoint-md: 860px;
+$breakpoint-lg: 1100px;
 $breakpoint-xl: 1440px;
 
 @mixin mobile {
@@ -16,19 +16,13 @@ $breakpoint-xl: 1440px;
 }
 
 @mixin desktop {
-  @media (min-width: #{$breakpoint-lg}) {
+  @media (max-width: #{$breakpoint-lg}) {
     @content;
   }
 }
 
-@mixin tablet-and-up {
-  @media (min-width: #{$breakpoint-md + 1}) {
-    @content;
-  }
-}
-
-@mixin desktop-and-up {
-  @media (min-width: #{$breakpoint-lg}) {
+@mixin desktop-xl {
+  @media (min-width: #{$breakpoint-xl}) {
     @content;
   }
 }
@@ -36,8 +30,12 @@ $breakpoint-xl: 1440px;
 @mixin inline-padding {
   padding-inline: 40px;
 
-  @include desktop {
+  @include desktop-xl {
     padding-inline: 140px;
+  }
+
+  @include desktop {
+    padding-inline: 24px;
   }
 
   @include tablet {

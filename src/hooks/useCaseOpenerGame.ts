@@ -124,22 +124,6 @@ export const useCaseOpenerGame = (
     handleSelectCase(selected);
   };
 
-  const onFinishOpening = async (
-    getTotalWon: (amount: number) => Promise<void>,
-    countWonGames: () => Promise<void>,
-  ) => {
-    if (finishingRef.current) return;
-    finishingRef.current = true;
-    setIsOpening(false);
-    if (onOpeningChange) onOpeningChange(false);
-    if (wonItem) {
-      await getTotalWon(wonItem.price);
-      await countWonGames();
-    }
-    openingRef.current = false;
-    setShowResult(true);
-  };
-
   const onFinishOpeningWithWinner = async (
     winner: CaseItem,
     getTotalWon: (amount: number) => Promise<void>,
@@ -162,18 +146,13 @@ export const useCaseOpenerGame = (
     showResult,
     isOpening,
     handleOpenCase,
-    handleSelectCase,
     handleCloseResult,
     handleRepeatBet,
     isCaseActive,
     onSelectCase,
-    finishingRef,
-    openingRef,
     rarityGradients,
-    setIsOpening,
     closeResultModal,
     pickWonItem,
-    onFinishOpening,
     onFinishOpeningWithWinner,
   };
 };
