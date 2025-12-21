@@ -1,38 +1,18 @@
 import { Home } from "./components/Home/Home";
 import { Header } from "./components/Header/Header";
 import { SettingsModal } from "./components/SettingsModal/SettingsModal";
-import { useState } from "react";
 import { useRocketGameContext } from "./contexts/rocketGameContextBase";
 import { BetResultModal } from "./components/Home/Games/RocketGame/BetResultModal/BetResultModal";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AppProvider } from "./AppProvider";
-import { useSettings } from "./hooks/useSettings";
+import { useSettingsModal } from "./hooks/useSettingsModal";
 
 function AppContent() {
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const { showBetResultModal, onClose, crashed, betAmount, coeff } =
     useRocketGameContext();
-  const {
-    changeUserName,
-    userNameError,
-    gamesPlayed,
-    totalWon,
-    totalWagered,
-    handleChangeUserName,
-    saveUsername,
-    resetStats,
-    loading,
-    saveMessage,
-    handleClearInput,
-  } = useSettings();
+  const { isSettingsOpen, openSettingsModal, settingsModalProps } =
+    useSettingsModal();
 
-  const handleOpenSettingsModal = () => {
-    setIsSettingsOpen(true);
-  };
-
-  const handleCloseSettingsModal = () => {
-    setIsSettingsOpen(false);
-  };
   return (
     <Routes>
       <Route path="/login" element={<Navigate to="/home" replace />} />
@@ -41,23 +21,10 @@ function AppContent() {
         path="/home"
         element={
           <>
-            <Header onSettingsClick={handleOpenSettingsModal} />
+            <Header onSettingsClick={openSettingsModal} />
             <Home />
             {isSettingsOpen && (
-              <SettingsModal
-                onClose={handleCloseSettingsModal}
-                changeUserName={changeUserName}
-                userNameError={userNameError}
-                gamesPlayed={gamesPlayed}
-                totalWon={totalWon}
-                totalWagered={totalWagered}
-                handleChangeUserName={handleChangeUserName}
-                saveUsername={saveUsername}
-                resetStats={resetStats}
-                loading={loading}
-                saveMessage={saveMessage}
-                handleClearInput={handleClearInput}
-              />
+              <SettingsModal {...settingsModalProps} />
             )}
             {showBetResultModal && (
               <BetResultModal

@@ -1,18 +1,21 @@
 import { useState, useCallback, useMemo, useRef } from "react";
-import { GameStatus } from "../types/enums";
+import { GameStatus, MinesCount } from "../types/enums";
 import { isValidBetAmount } from "../utils/utils";
 import { useBalanceContext } from "../contexts/balanceContextBase";
 import { useSettings } from "./useSettings";
 import { calculateMultiplier } from "../utils/calculateMultiplier";
 import { resetGrid } from "../utils/minesGrid";
 import type { Cell } from "../types/Types";
+import { GAME_CONFIG } from "../constants";
 
 export const useMinesGame = () => {
   const { spendBalance, addToBalance } = useBalanceContext();
   const { getTotalWon, getTotalWag, countGames, countWonGames } = useSettings();
 
-  const [minesCount, setMinesCount] = useState(3);
-  const [betAmount, setBetAmount] = useState("10");
+  const minBetAmount = GAME_CONFIG.QUICK_BET_AMOUNTS[0] ?? 1;
+
+  const [minesCount, setMinesCount] = useState<MinesCount>(MinesCount.Three);
+  const [betAmount, setBetAmount] = useState(String(minBetAmount));
   const [gameState, setGameState] = useState<GameStatus>(GameStatus.Idle);
   const hasProcessedWinRef = useRef(false);
   const startInProgressRef = useRef(false);
@@ -31,8 +34,14 @@ export const useMinesGame = () => {
     if (startInProgressRef.current || gameState === GameStatus.Playing) return;
     startInProgressRef.current = true;
 
+    if (betAmount.trim() === "") {
+      startInProgressRef.current = false;
+      return;
+    }
+
     const amount = Number(betAmount);
-    if (isNaN(amount) || amount < 1) {
+    if (isNaN(amount) || amount < minBetAmount) {
+      setBetAmount(String(minBetAmount));
       startInProgressRef.current = false;
       return;
     }
@@ -61,7 +70,7 @@ export const useMinesGame = () => {
     } finally {
       startInProgressRef.current = false;
     }
-  }, [betAmount, minesCount, spendBalance, getTotalWag, countGames, gameState]);
+  }, [betAmount, minesCount, spendBalance, getTotalWag, countGames, gameState, minBetAmount]);
 
   const revealCell = useCallback(
     (id: number) => {
@@ -153,7 +162,7 @@ export const useMinesGame = () => {
     }
   };
 
-  const handleMinesCountChange = (count: number) => {
+  const handleMinesCountChange = (count: MinesCount) => {
     setMinesCount(count);
     resetIfGameOver();
   };

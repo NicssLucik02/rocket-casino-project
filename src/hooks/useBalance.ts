@@ -10,7 +10,7 @@ export const useBalance = () => {
 
   const setupRealtimeChannel = useCallback((userId: string) => {
     if (channelRef.current) {
-      supabase.removeChannel(channelRef.current);
+      void supabase.removeChannel(channelRef.current);
       channelRef.current = null;
     }
 
@@ -77,7 +77,7 @@ export const useBalance = () => {
         if (!userId || !mountedRef.current) {
           setBalance(null);
           if (channelRef.current) {
-            supabase.removeChannel(channelRef.current);
+            void supabase.removeChannel(channelRef.current);
             channelRef.current = null;
           }
           return;
@@ -100,7 +100,8 @@ export const useBalance = () => {
       mountedRef.current = false;
       authListener.subscription.unsubscribe();
       if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
+        void supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
       }
     };
   }, [loadBalance, setupRealtimeChannel]);
@@ -133,7 +134,7 @@ export const useBalance = () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user) return { success: false, error: "Не авторизован" };
+    if (!user) return { success: false, error: "The user is not authorized" };
 
     const { error } = await supabase.rpc("add_balance", {
       amount: Math.floor(Number(amount)),
@@ -151,7 +152,7 @@ export const useBalance = () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user) return { success: false, error: "Не авторизован" };
+    if (!user) return { success: false, error: "The user is not authorized" };
 
     const { error } = await supabase.rpc("spend_balance", { amount });
     if (error) return { success: false, error: error.message };

@@ -9,7 +9,7 @@ export const useSettings = () => {
   const [totalWon, setTotalWon] = useState(0);
   const [totalWagered, setTotalWagered] = useState(0);
   const [wonGames, setWonGames] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [saveMessage, setSaveMessage] = useState<{
     text: string;
@@ -20,7 +20,7 @@ export const useSettings = () => {
 
   const loadProfile = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -40,7 +40,7 @@ export const useSettings = () => {
         setWonGames(data.games_won ?? 0);
       }
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -143,14 +143,14 @@ export const useSettings = () => {
   const saveUsername = async () => {
     if (userNameError || !changeUserName.trim()) return;
 
-    setLoading(true);
+    setIsLoading(true);
     setSaveMessage(null);
 
     const {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) {
-      setLoading(false);
+      setIsLoading(false);
       return;
     }
 
@@ -159,7 +159,7 @@ export const useSettings = () => {
       .update({ username: changeUserName.trim() })
       .eq("id", user.id);
 
-    setLoading(false);
+    setIsLoading(false);
 
     if (error) {
       setSaveMessage({
@@ -173,14 +173,14 @@ export const useSettings = () => {
   };
 
   const resetStats = async () => {
-    setLoading(true);
+    setIsLoading(true);
     setSaveMessage(null);
 
     const {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) {
-      setLoading(false);
+      setIsLoading(false);
       return setSaveMessage({ text: "Не авторизован", type: "error" });
     }
 
@@ -194,7 +194,7 @@ export const useSettings = () => {
       })
       .eq("id", user.id);
 
-    setLoading(false);
+    setIsLoading(false);
 
     if (error) {
       setSaveMessage({ text: "Ошибка сброса", type: "error" });
@@ -253,7 +253,7 @@ export const useSettings = () => {
     totalWon,
     totalWagered,
     wonGames,
-    loading,
+    isLoading,
     saveMessage,
     handleClearInput,
     handleChangeUserName,

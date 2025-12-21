@@ -2,12 +2,13 @@ import styles from "./mines-settings.module.scss";
 import { MinesSettingsInfo } from "./MinesGameInfo/MinesSettingsInfo";
 import { MinesSettingsTips } from "./MinesGamesTips/MinesSettingsTips";
 import { MinesSettingsPanel } from "./MinesSettingsPanel/MinesSettingsPanel";
+import type { MinesCount } from "../../../../../types/enums";
 type Props = {
   betAmount: string;
   onBetChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSetBetAmount: (amount: string) => void;
-  minesCount: number;
-  onMinesCountChange: (count: number) => void;
+  minesCount: MinesCount;
+  onMinesCountChange: (count: MinesCount) => void;
   startGame: () => void;
   cashOut: () => void;
   gameState: string;

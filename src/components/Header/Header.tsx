@@ -9,6 +9,7 @@ import WalletIcon from "@/assets/icons/Wallet.svg?react";
 import SettingsIcon from "@/assets/icons/Settings.svg?react";
 import LogoutIcon from "@/assets/icons/Logout.svg?react";
 import { Menu } from "lucide-react";
+import { HeaderMenu } from "./HeaderMenu";
 
 type Props = {
   onSettingsClick: () => void;
@@ -19,7 +20,17 @@ export const Header: React.FC<Props> = ({ onSettingsClick }) => {
   const { balance } = useBalanceContext();
   const [menuOpen, setMenuOpen] = useState(false);
   const toggleMenu = () => setMenuOpen((p) => !p);
-  const closeMenu = () => setMenuOpen(false);
+
+  const handleMenuSettingsClick = () => {
+    toggleMenu();
+    onSettingsClick();
+  };
+
+  const handleMenuLogoutClick = () => {
+    toggleMenu();
+    handleLogout();
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles["header__title"]}>
@@ -63,41 +74,12 @@ export const Header: React.FC<Props> = ({ onSettingsClick }) => {
       </div>
 
       {menuOpen && (
-        <>
-          <div className={styles["header__menu-overlay"]} onClick={closeMenu} />
-          <div className={styles["header__menu"]}>
-            <div className={styles["header__menu-item"]}>
-              <WalletIcon className={styles["wallet-icon"]} />
-              <span>
-                {balance !== null ? (
-                  `$${formatNumber(balance)}`
-                ) : (
-                  <ClipLoader color="#00bc6eff" size={16} />
-                )}
-              </span>
-            </div>
-            <div
-              className={styles["header__menu-item"]}
-              onClick={() => {
-                closeMenu();
-                onSettingsClick();
-              }}
-            >
-              <SettingsIcon className={styles["settings-icon"]} />
-              <span>Settings</span>
-            </div>
-            <div
-              className={styles["header__menu-item"]}
-              onClick={() => {
-                closeMenu();
-                handleLogout();
-              }}
-            >
-              <LogoutIcon className={styles["logout-icon"]} />
-              <span>Logout</span>
-            </div>
-          </div>
-        </>
+        <HeaderMenu
+          balance={balance}
+          onClose={toggleMenu}
+          onSettingsClick={handleMenuSettingsClick}
+          onLogoutClick={handleMenuLogoutClick}
+        />
       )}
     </header>
   );

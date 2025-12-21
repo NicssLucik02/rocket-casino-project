@@ -19,3 +19,11 @@ export enum GameStatus {
   Win = "win",
   Lost = "lost",
 }
+
+export enum MinesCount {
+  One = 1,
+  Three = 3,
+  Five = 5,
+  Ten = 10,
+  Fifteen = 15,
+}

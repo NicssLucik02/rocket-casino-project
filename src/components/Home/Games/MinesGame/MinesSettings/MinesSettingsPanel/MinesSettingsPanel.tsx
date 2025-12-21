@@ -5,13 +5,14 @@ import { SecondaryButton } from "../../../../../uikit/Buttons/SecondaryButton/Se
 import { PrimaryInput } from "../../../../../uikit/Inputs/Input";
 import styles from "./mines-settings-panel.module.scss";
 import CurrencyIcon from "../../../../../../assets/icons/Currency.svg?react";
+import { MinesCount } from "../../../../../../types/enums";
 
 type Props = {
   betAmount: string;
   onBetChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSetBetAmount: (amount: string) => void;
-  minesCount: number;
-  onMinesCountChange: (count: number) => void;
+  minesCount: MinesCount;
+  onMinesCountChange: (count: MinesCount) => void;
   startGame: () => void;
   cashOut: () => void;
   gameState: string;
@@ -31,7 +32,7 @@ export const MinesSettingsPanel: React.FC<Props> = ({
   isPlaying,
   currentWin,
 }) => {
-  const handleChangeMines = (item: number) =>
+  const handleChangeMines = (item: MinesCount) =>
     !isPlaying && onMinesCountChange(item);
 
   return (
@@ -70,7 +71,14 @@ export const MinesSettingsPanel: React.FC<Props> = ({
           <p className={styles["settings-panel__desc"]}>Mines: {minesCount}</p>
 
           <div className={styles["settings-panel__buttons"]}>
-            {[1, 3, 5, 10, 15].map((item) => {
+            {
+              [
+                MinesCount.One,
+                MinesCount.Three,
+                MinesCount.Five,
+                MinesCount.Ten,
+                MinesCount.Fifteen,
+              ].map((item) => {
               return (
                 <SecondaryButton
                   key={item}
@@ -83,7 +91,8 @@ export const MinesSettingsPanel: React.FC<Props> = ({
                   disabled={isPlaying}
                 />
               );
-            })}
+              })
+            }
           </div>
         </div>
 

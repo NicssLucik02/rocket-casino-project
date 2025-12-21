@@ -10,7 +10,7 @@ import UserIcon from "../../assets/icons/User.svg?react";
 import { GAME_CONFIG, SUPABASE_CONFIG } from "../../constants";
 import { AccountStats } from "./ModalParts/AccountStats";
 
-type Props = {
+export type SettingsModalProps = {
   onClose: () => void;
   changeUserName: string;
   userNameError: string;
@@ -20,12 +20,12 @@ type Props = {
   handleChangeUserName: (e: React.ChangeEvent<HTMLInputElement>) => void;
   saveUsername: () => void;
   resetStats: () => void;
-  loading: boolean;
+  isLoading: boolean;
   saveMessage: { type: string; text: string } | null;
   handleClearInput: () => void;
 };
 
-export const SettingsModal: React.FC<Props> = ({
+export const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
   changeUserName,
   userNameError,
@@ -35,7 +35,7 @@ export const SettingsModal: React.FC<Props> = ({
   handleChangeUserName,
   saveUsername,
   resetStats,
-  loading,
+  isLoading,
   saveMessage,
   handleClearInput,
 }) => {
@@ -55,7 +55,7 @@ export const SettingsModal: React.FC<Props> = ({
       <div className={styles["settings-modal__overlay"]} onClick={onClose} />
 
       <div className={styles["settings-modal"]}>
-        {loading ? (
+        {isLoading ? (
           <ClipLoader
             color={SUPABASE_CONFIG.SPINNER_COLOR}
             size={SUPABASE_CONFIG.SPINNER_SIZE}
