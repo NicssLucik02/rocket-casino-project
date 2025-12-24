@@ -1,17 +1,20 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
-import path from "path"; // ← Обязательно добавь это
+import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
   plugins: [react(), svgr({})],
 
-  base: "/rocket-casino-project/", // ← Это правильно для твоего деплоя на Vercel
-
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),         // @ → папка src
-      "@assets": path.resolve(__dirname, "./assets"), // @assets → папка assets в корне
-    },
+    alias: [
+      {
+        find: /^@\/assets\//,
+        replacement: fileURLToPath(new URL("./src/assets/", import.meta.url)),
+      },
+      { find: /^@\//, replacement: fileURLToPath(new URL("./src/", import.meta.url)) },
+    ],
   },
+
+  base: "/rocket-casino-project/",
 });

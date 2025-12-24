@@ -4,7 +4,7 @@ import { PrimaryButton } from "../../../../../uikit/Buttons/PrimaryButton/Primar
 import { SecondaryButton } from "../../../../../uikit/Buttons/SecondaryButton/SecondaryButton";
 import { PrimaryInput } from "../../../../../uikit/Inputs/Input";
 import styles from "./mines-settings-panel.module.scss";
-import CurrencyIcon from "@assets/icons/Currency.svg?react";
+import CurrencyIcon from "@/assets/icons/Currency.svg?react";
 import { MinesCount } from "../../../../../../types/enums";
 
 type Props = {

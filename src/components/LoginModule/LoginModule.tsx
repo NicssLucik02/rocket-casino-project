@@ -3,8 +3,8 @@ import { PrimaryButton } from "../uikit/Buttons/PrimaryButton/PrimaryButton";
 import { PrimaryInput } from "../uikit/Inputs/Input";
 import styles from "./loginModule.module.scss";
 import { useForm } from "../../hooks/useForm";
-import RocketLogo from "@assets/icons/RocketLogo.svg?react";
-import LoginIcon from "@assets/icons/Login.svg?react";
+import RocketLogo from "@/assets/icons/RocketLogo.svg?react";
+import LoginIcon from "@/assets/icons/Login.svg?react";
 
 export const LoginModule = () => {
   const {

@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { SecondaryButton } from "../../../uikit/Buttons/SecondaryButton/SecondaryButton";
 import { PrimaryInput } from "../../../uikit/Inputs/Input";
 import { PrimaryButton } from "../../../uikit/Buttons/PrimaryButton/PrimaryButton";
-import carImg from "@assets/images/Car.png";
+import carImg from "@/assets/images/Car.png";
 import { useWindowSize } from "../../../../hooks/useWindowSize";
 import { formatNumber } from "../../../../utils/utils";
 import stylesAnimations from "../../HomeGame/gameAnimations.module.scss";
