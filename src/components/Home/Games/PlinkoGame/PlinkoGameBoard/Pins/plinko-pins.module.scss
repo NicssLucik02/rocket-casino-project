@@ -2,12 +2,7 @@
 
 .pyramid {
   position: absolute;
-  inset: 6% 10% 24% 10%;
-  height: 450px;
-
-  @include tablet {
-   height: 350px;
-  }
+  inset: 0;
 }
 
 .pin {
