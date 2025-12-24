@@ -1,7 +1,7 @@
 import { PrimaryButton } from "../../../../uikit/Buttons/PrimaryButton/PrimaryButton";
 import styles from "./bet-modal.module.scss";
-import emptyCarImg from "@/assets/images/EmptyCar.png";
-import Cashout from "@/assets/images/Cashout.png";
+import emptyCarImg from "../../../../../assets/images/EmptyCar.png";
+import Cashout from "../../../../../assets/images/Cashout.png";
 import classNames from "classnames";
 import { formatNumber } from "../../../../../utils/utils";
 

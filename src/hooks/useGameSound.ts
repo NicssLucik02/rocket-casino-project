@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
-import clickSoundSrc from "@/assets/sounds/Click.wav";
-import loseSoundSrc from "@/assets/sounds/lose.wav";
+import clickSoundSrc from "../assets/sounds/Click.wav";
+import loseSoundSrc from "../assets/sounds/lose.wav";
 
 type SoundKey = "click" | "lose";
 

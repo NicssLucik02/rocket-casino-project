@@ -5,7 +5,7 @@ import { balanceStore } from "../../stores/balanceStore";
 import { UsernameSection } from "./ModalParts/UsernameSection";
 import { ModalActions } from "./ModalParts/ModalActions";
 
-import UserIcon from "@/assets/icons/User.svg?react";
+import UserIcon from "../../assets/icons/User.svg?react";
 
 import { GAME_CONFIG, SUPABASE_CONFIG } from "../../constants";
 import { AccountStats } from "./ModalParts/AccountStats";
