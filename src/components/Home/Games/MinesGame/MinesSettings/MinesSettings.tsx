@@ -2,36 +2,25 @@ import styles from "./mines-settings.module.scss";
 import { MinesSettingsInfo } from "./MinesGameInfo/MinesSettingsInfo";
 import { MinesSettingsTips } from "./MinesGamesTips/MinesSettingsTips";
 import { MinesSettingsPanel } from "./MinesSettingsPanel/MinesSettingsPanel";
-import type { MinesCount } from "../../../../../types/enums";
-type Props = {
-  betAmount: string;
-  onBetChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSetBetAmount: (amount: string) => void;
-  minesCount: MinesCount;
-  onMinesCountChange: (count: MinesCount) => void;
-  startGame: () => void;
-  cashOut: () => void;
-  gameState: string;
-  currentMultiplier: number;
-  currentWin: number;
-  revealedCount: number;
-};
+import { useMinesGameController } from "../../../../../hooks/useMinesGameController";
+import { GameStatus } from "../../../../../types/enums";
 
-export const MinesSettings: React.FC<Props> = ({
-  betAmount,
-  onBetChange,
-  onSetBetAmount,
-  minesCount,
-  onMinesCountChange,
-  startGame,
-  cashOut,
-  gameState,
-  currentMultiplier,
-  currentWin,
-  revealedCount,
-}) => {
-  const isPlaying = gameState === "playing";
+export const MinesSettings = () => {
+  const {
+    minesCount,
+    betAmount,
+    gameState,
+    startGame,
+    cashOut,
+    currentMultiplier,
+    revealedCount,
+    setMinesCount,
+    onBetChange,
+    onSetBetAmount,
+    currentWin,
+  } = useMinesGameController();
 
+  const isPlaying = gameState === GameStatus.Playing;
   const safeFields = 25 - minesCount - revealedCount;
 
   return (
@@ -43,7 +32,7 @@ export const MinesSettings: React.FC<Props> = ({
         onBetChange={onBetChange}
         onSetBetAmount={onSetBetAmount}
         minesCount={minesCount}
-        onMinesCountChange={onMinesCountChange}
+        onMinesCountChange={setMinesCount}
         startGame={startGame}
         cashOut={cashOut}
         gameState={gameState}

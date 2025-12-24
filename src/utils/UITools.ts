@@ -5,7 +5,8 @@ export const getGradient = (item: CaseItem) => {
   if (item.color1 && item.color2) {
     return `linear-gradient(to right, ${item.color1}, ${item.color2})`;
   }
-  switch (item.rarity) {
+  const rarity = item.rarity.toLowerCase() as Rarity;
+  switch (rarity) {
     case "common":
       return "linear-gradient(to right, rgba(69, 85, 108, 1), rgba(49, 65, 88, 1))";
     case "uncommon":

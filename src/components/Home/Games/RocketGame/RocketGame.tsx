@@ -2,35 +2,38 @@ import classNames from "classnames";
 import { SecondaryButton } from "../../../uikit/Buttons/SecondaryButton/SecondaryButton";
 import { PrimaryInput } from "../../../uikit/Inputs/Input";
 import { PrimaryButton } from "../../../uikit/Buttons/PrimaryButton/PrimaryButton";
-import { useRocketGameContext } from "../../../../contexts/rocketGameContextBase";
 import carImg from "../../../../assets/images/car.png";
 import { useWindowSize } from "../../../../hooks/useWindowSize";
 import { formatNumber } from "../../../../utils/utils";
 import stylesAnimations from "../../HomeGame/gameAnimations.module.scss";
 import stylesHomeGame from "../../HomeGame/homeGame.module.scss";
 import { COLORS, GAME_CONFIG } from "../../../../constants";
+import { useRocketGameStore } from "../../../../stores/rocketGameStore";
 
 export const RocketGame = () => {
   const {
-    handleChangeBetAmount,
-    startGame,
-    currentDuration,
-    handleCashOut,
     isRunning,
     crashed,
     coeff,
     crashPoint,
     betAmount,
     betError,
-  } = useRocketGameContext();
+    setBetAmount,
+    startRound,
+    cashOutRound,
+  } = useRocketGameStore();
   const { isMobile } = useWindowSize();
   const buttonWidth = isMobile ? "100" : "50";
 
+  const maxDuration = 12;
+  const speedMultiplier = Math.min(coeff / 1.5, 4);
+  const currentDuration = maxDuration / speedMultiplier;
+
   const handlePrimaryButtonClick = () => {
     if (isRunning) {
-      handleCashOut();
+      void cashOutRound();
     } else {
-      startGame();
+      void startRound();
     }
   };
 
@@ -70,7 +73,7 @@ export const RocketGame = () => {
             bgColor={COLORS.BACKGROUND_DARK}
             widthSize={buttonWidth}
             inputValue={betAmount}
-            handler={handleChangeBetAmount}
+            handler={(e) => setBetAmount(e.target.value)}
           />
           {betError && (
             <p className={stylesHomeGame["home-game__error"]}>{betError}</p>
@@ -99,7 +102,7 @@ export const RocketGame = () => {
               amount={num}
               symbol="$"
               widthSize={"25"}
-              handler={(_, amount) => handleChangeBetAmount(amount)}
+              handler={(_, amount) => setBetAmount(amount)}
             />
           ))}
         </div>

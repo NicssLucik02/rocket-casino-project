@@ -1,0 +1,43 @@
+.balls-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(29, 41, 61, 1);
+    width: 82px;
+    height: 64px;
+    border-radius: 8px;
+    border: 1px solid rgba(69, 85, 108, 1);
+    transition: all 250ms ease;
+    cursor: pointer;
+    padding: 0;
+    appearance: none;
+
+    &:hover:not(:disabled) {
+        opacity: 0.9;
+    }
+    
+    &__title{
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 28px;
+        margin: 0;
+    }
+
+    &__price {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 16px;
+        color: rgb(172, 172, 172);
+        margin: 0;
+    }
+}
+
+.disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.active {
+    background: linear-gradient(to right, var(--primary-gradient));
+}

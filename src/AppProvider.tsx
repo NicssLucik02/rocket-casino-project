@@ -1,13 +1,11 @@
-import { useAuth } from "./hooks/useAuth";
 import { LoginModule } from "./components/LoginModule/LoginModule";
-import BalanceProvider from "./contexts/BalanceContext";
-import RocketGameProvider from "./contexts/RocketGameContext";
 import { Loader } from "./components/uikit/Loader/Loader";
+import { useAuthStore } from "./stores/authStore/authStore";
 
 type Props = { children: React.ReactNode };
 
 export const AppProvider: React.FC<Props> = ({ children }) => {
-  const { user, loading } = useAuth();
+  const { user, loading } = useAuthStore();
 
   if (loading) {
     return <Loader isLoading={loading} />;
@@ -17,9 +15,5 @@ export const AppProvider: React.FC<Props> = ({ children }) => {
     return <LoginModule />;
   }
 
-  return (
-    <BalanceProvider>
-      <RocketGameProvider>{children}</RocketGameProvider>
-    </BalanceProvider>
-  );
+  return children;
 };

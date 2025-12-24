@@ -1,4 +1,4 @@
-import type { Cell } from "../types/Types";
+import type { Cell } from "../../types/Types";
 
 export const createMinesGrid = (minesCount: number): Cell[] => {
   const grid = Array.from({ length: 25 }, (_, i) => ({

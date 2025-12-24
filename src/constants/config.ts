@@ -15,3 +15,17 @@ export const SUPABASE_CONFIG = {
   SPINNER_COLOR: "#0013bcff",
   SPINNER_SIZE: 70,
 };
+
+export const PLINKO_BALL_CONFIG = {
+  GRAVITY: 2800,
+  AIR_DRAG: 0.992,
+  RESTITUTION: 0.45,
+  WALL_RESTITUTION: 0.55,
+  BALL_RADIUS: 10,
+  PIN_HIT_COOLDOWN: 70,
+};
+
+export const PLINKO_HISTORY_STORAGE_KEY = "plinko_history";
+export const PLINKO_HISTORY_UPDATED_EVENT = "plinko_history_updated";
+
+export const MAX_HISTORY_ITEMS = 100;

@@ -52,6 +52,5 @@ export const useGameSounds = (options?: { volume?: number }) => {
   return {
     playClick,
     playLose,
-    playSound,
   };
 };

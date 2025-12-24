@@ -3,7 +3,7 @@ import styles from "./secondaryButton.module.scss";
 import { useCallback } from "react";
 
 type Props = {
-  amount: number;
+  amount: number | string;
   widthSize: string;
   symbol?: string;
   handler: (event: React.MouseEvent<HTMLButtonElement>, amount: string) => void;

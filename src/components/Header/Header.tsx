@@ -1,7 +1,7 @@
 import { useForm } from "../../hooks/useForm";
 import { useState } from "react";
 import styles from "./header.module.scss";
-import { useBalanceContext } from "../../contexts/balanceContextBase";
+import { balanceStore } from "../../stores/balanceStore";
 import { ClipLoader } from "react-spinners";
 import { formatNumber } from "../../utils/utils";
 import LogoIcon from "@/assets/icons/logo.svg?react";
@@ -17,7 +17,7 @@ type Props = {
 
 export const Header: React.FC<Props> = ({ onSettingsClick }) => {
   const { handleLogout } = useForm();
-  const { balance } = useBalanceContext();
+  const balance = balanceStore((s) => s.balance);
   const [menuOpen, setMenuOpen] = useState(false);
   const toggleMenu = () => setMenuOpen((p) => !p);
 

@@ -1,6 +1,7 @@
 import styles from "./caseGame.module.scss";
 import betModalStyles from "../../Games/RocketGame/BetResultModal/bet-modal.module.scss";
 import classNames from "classnames";
+import { useEffect, useMemo, useCallback } from "react";
 import { cases } from "../../../../constants/cases";
 import { Case } from "./Case/Case";
 import { PrimaryButton } from "../../../uikit/Buttons/PrimaryButton/PrimaryButton";
@@ -8,47 +9,92 @@ import type {
   CaseItem as CaseItemType,
   CaseType,
   RarityInfo,
+  Rarity,
 } from "../../../../types/Types";
 import BoxIcon from "../../../../assets/icons/Box.svg?react";
 import { CaseItem } from "./Case/CaseItem";
 import { CaseOpeningAnimation } from "./CaseOpenerAnimation";
 import { CaseBetResult } from "./CaseBetResult/CaseBetResult";
 import { caseItemsRarities } from "../../../../constants/caseItemsRarity";
-import { useCaseOpenerGame } from "../../../../hooks/useCaseOpenerGame";
-import { useSettings } from "../../../../hooks/useSettings";
+import { useProfile } from "../../../../hooks/useProfile";
 import { COLORS } from "../../../../constants";
+import { useCaseGameStore } from "../../../../stores/caseGameStore";
+import { balanceStore } from "../../../../stores/balanceStore";
+import { RarityTypes } from "../../../../types/enums";
 
 type Props = { onOpeningChange?: (opening: boolean) => void };
 
 export const CaseOpenerGame: React.FC<Props> = ({ onOpeningChange }) => {
-  const { getTotalWon, getTotalWag, countWonGames, countGames } = useSettings();
+  const { getTotalWon, getTotalWag, countWonGames, countGames } = useProfile();
   const {
     currentCase,
+    isOpening,
     wonItem,
     showResult,
-    isOpening,
-    handleOpenCase,
-    handleCloseResult,
-    handleRepeatBet,
-    isCaseActive,
-    onSelectCase,
-    rarityGradients,
-    closeResultModal,
-    pickWonItem,
-    onFinishOpeningWithWinner,
-  } = useCaseOpenerGame(onOpeningChange, { getTotalWag, countGames });
+    selectCase,
+    startOpening,
+    repeatOpening,
+    finishOpening,
+    closeResult,
+    pickRandomItem,
+    getRarityGradient,
+  } = useCaseGameStore();
 
-  const prepairedCountGames = async () => {
-    await countWonGames();
-  };
+  useEffect(() => {
+    onOpeningChange?.(isOpening);
+  }, [isOpening, onOpeningChange]);
 
-  const preparedOnFinish = (winner: CaseItemType) => {
-    onFinishOpeningWithWinner(winner, getTotalWon, prepairedCountGames);
-  };
+  const rarityGradients = useMemo<Record<Rarity, string>>(
+    () => ({
+      common: getRarityGradient(RarityTypes.Common),
+      uncommon: getRarityGradient(RarityTypes.Uncommon),
+      rare: getRarityGradient(RarityTypes.Rare),
+      epic: getRarityGradient(RarityTypes.Epic),
+      legendary: getRarityGradient(RarityTypes.Legendary),
+      gold: getRarityGradient(RarityTypes.Gold),
+    }),
+    [getRarityGradient],
+  );
 
-  const openCase = () => {
-    void handleOpenCase();
-  };
+  const isCaseActive = useCallback(
+    (caseItem: CaseType) => currentCase?.id === caseItem.id,
+    [currentCase?.id],
+  );
+
+  const preparedOnFinish = useCallback(
+    (winner: CaseItemType) => {
+      finishOpening(winner);
+      void (async () => {
+        await balanceStore.getState().addToBalance(winner.price);
+        await getTotalWon(winner.price);
+        await countWonGames();
+      })();
+    },
+    [finishOpening, getTotalWon, countWonGames],
+  );
+
+  const openCase = useCallback(() => {
+    void (async () => {
+      if (!currentCase) return;
+      const success = await startOpening();
+      if (!success) return;
+      await getTotalWag(currentCase.price);
+      await countGames();
+    })();
+  }, [currentCase, startOpening, getTotalWag, countGames]);
+
+  const handleRepeatBet = useCallback(
+    (win: CaseItemType) => {
+      void (async () => {
+        const casePrice = currentCase?.price;
+        const success = await repeatOpening(win);
+        if (!success || casePrice === undefined) return;
+        await getTotalWag(casePrice);
+        await countGames();
+      })();
+    },
+    [currentCase?.price, repeatOpening, getTotalWag, countGames],
+  );
 
   return (
     <div className={styles["case-game"]}>
@@ -63,7 +109,7 @@ export const CaseOpenerGame: React.FC<Props> = ({ onOpeningChange }) => {
             <Case
               key={caseItem.id}
               itemCase={caseItem}
-              onSelectCase={onSelectCase}
+              onSelectCase={selectCase}
               isActive={isCaseActive(caseItem)}
             />
           ))}
@@ -134,15 +180,15 @@ export const CaseOpenerGame: React.FC<Props> = ({ onOpeningChange }) => {
       {showResult && wonItem && (
         <div
           className={betModalStyles["bet-modal__overlay"]}
-          onClick={closeResultModal}
+          onClick={closeResult}
         >
           <CaseBetResult
             wonItem={wonItem}
             rarityGradients={rarityGradients}
-            onClose={handleCloseResult}
+            onClose={closeResult}
             currentCase={currentCase as CaseType}
             isOpening={isOpening}
-            pickWonItem={pickWonItem}
+            pickWonItem={pickRandomItem}
             handleRepeatBet={handleRepeatBet}
           />
         </div>

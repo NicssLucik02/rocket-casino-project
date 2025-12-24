@@ -1,0 +1,17 @@
+@import '../../../../styles//mixins.scss';
+
+.plinkoGame {
+
+    &__container {
+        display: flex;
+        gap: 24px;
+
+        @include desktop {
+            flex-direction: column;
+        }
+
+        @include mobile {
+            gap: 14px;
+        }
+    }
+}

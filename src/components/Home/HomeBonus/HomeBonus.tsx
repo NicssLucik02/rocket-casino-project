@@ -1,12 +1,12 @@
 import styles from "./homeBonus.module.scss";
 import { PrimaryButton } from "../../uikit/Buttons/PrimaryButton/PrimaryButton";
-import { useBalanceContext } from "../../../contexts/balanceContextBase";
+import { balanceStore } from "../../../stores/balanceStore";
 import { useState, useEffect } from "react";
 import BonusIcon from "../../../assets/icons/Bonus.svg?react";
 import TimeIcon from "../../../assets/icons/Time.svg?react";
 
 export const HomeBonus = () => {
-  const { addBonus } = useBalanceContext();
+  const addBonus = balanceStore((s) => s.addBonus);
   const [timeLeft, setTimeLeft] = useState<number>(() => {
     const savedTime = localStorage.getItem("bonusCooldown");
     if (!savedTime) return 0;

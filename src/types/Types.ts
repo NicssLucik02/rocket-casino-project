@@ -1,4 +1,6 @@
-import type { RarityTypes } from "./enums";
+import type { RarityTypes, RiskLevel } from "./enums";
+
+export type Rarity = Lowercase<RarityTypes>;
 
 export type FormDataType = {
   email: string;
@@ -24,19 +26,12 @@ export type LeaderboardEntry = {
   games_won: number;
 };
 
-export type Rarity =
-  | "common"
-  | "uncommon"
-  | "rare"
-  | "epic"
-  | "legendary"
-  | "gold";
 
 export type CaseItem = {
   id: number;
   icon: string;
   price: number;
-  rarity: Rarity;
+  rarity: RarityTypes | Rarity;
   name?: string;
   color1?: string;
   color2?: string;
@@ -70,4 +65,58 @@ export type RarityInfo = {
   rarity: RarityTypes;
   chance: number;
   gradient: string;
+};
+
+export type PlinkoHistoryItemType = {
+    id: string;
+    timestamp: string;
+    bet: number;
+    balls: number;
+    risk: RiskLevel;
+    lines: number;
+    results: Array<{
+        multiplier: number;
+        payout: number;
+        slotIndex: number;
+    }>;
+};
+
+export type Pin = {
+  key: string;
+  x: number;
+  y: number;
+};
+
+export type Hit = {
+  id: string;
+  slotIndex: number;
+  multiplier: number;
+  winAmount: number;
+};
+
+export type PlinkoHistoryItem = {
+  id: string;
+  timestamp: string;
+  bet: number;
+  balls: number;
+  risk: RiskLevel;
+  lines: number;
+  results: Array<{
+    multiplier: number;
+    payout: number;
+    slotIndex: number;
+  }>;
+};
+
+export type PlinkoResult = {
+  slotIndex: number;
+  multiplier: number;
+  payout: number;
+};
+
+export type FloatingHit = {
+  id: string;
+  slotIndex: number;
+  multiplier: number;
+  winAmount: number;
 };

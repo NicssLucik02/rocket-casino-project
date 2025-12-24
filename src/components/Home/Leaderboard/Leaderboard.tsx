@@ -1,12 +1,20 @@
 import styles from "./leaderboard.module.scss";
-import { useLeaderboard } from "../../../hooks/useLeaderboard";
-import { useAuth } from "../../../hooks/useAuth";
 import { LeaderboardItem } from "./LeaderboardItem";
 import LeaderboardIcon from "../../../assets/icons/Leaderboard.svg?react";
+import { useAuthStore } from "../../../stores/authStore/authStore";
+import { useLeaderboardStore } from "../../../stores/leaderBoardStore/leaderboardStore";
+import { useEffect } from "react";
 
 export const Leaderboard = () => {
-  const { leaderboard, loading } = useLeaderboard();
-  const { user } = useAuth();
+  const leaderboard = useLeaderboardStore((s) => s.leaderboard);
+  const loading = useLeaderboardStore((s) => s.loading);
+  const error = useLeaderboardStore((s) => s.error);
+  const fetchLeaderboard = useLeaderboardStore((s) => s.fetchLeaderboard);
+  const { user } = useAuthStore();
+
+  useEffect(() => {
+    void fetchLeaderboard();
+  }, [fetchLeaderboard]);
 
   return (
     <div className={styles["leaderboard"]}>
@@ -26,6 +34,8 @@ export const Leaderboard = () => {
         <div>
           {loading ? (
             <p>Loading...</p>
+          ) : error ? (
+            <p>{error}</p>
           ) : (
             <ul className={styles["leaderboard__list"]}>
               {leaderboard.map((player) => (

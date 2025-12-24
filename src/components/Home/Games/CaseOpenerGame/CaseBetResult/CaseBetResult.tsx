@@ -39,7 +39,7 @@ export const CaseBetResult: React.FC<Props> = ({
               background:
                 wonItem.color1 && wonItem.color2
                   ? `linear-gradient(to right, ${wonItem.color1}, ${wonItem.color2})`
-                  : rarityGradients[wonItem.rarity],
+                  : rarityGradients[String(wonItem.rarity).toLowerCase() as Rarity],
             }}
           >
             {wonItem.icon}

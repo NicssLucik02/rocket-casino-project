@@ -4,15 +4,16 @@ import { useState } from "react";
 import { RocketGame } from "../Games/RocketGame/RocketGame";
 import { useSearchParams } from "react-router-dom";
 import { CaseOpenerGame } from "../Games/CaseOpenerGame/CaseOpenerGame";
-import { useRocketGameContext } from "../../../contexts/rocketGameContextBase";
 import { games } from "../../../constants/games";
 import { GameTypes } from "../../../types/enums";
 import { RocketIcon } from "lucide-react";
 import { MinesGame } from "../Games/MinesGame/MinesGame";
+import { PlinkoGame } from "../Games/PlinkoGame/PlinkoGame";
+import { useRocketGameStore } from "../../../stores/rocketGameStore";
 
 export const HomeGame = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isRunning } = useRocketGameContext();
+  const isRunning = useRocketGameStore((s) => s.isRunning);
   const [isCaseOpening, setIsCaseOpening] = useState(false);
 
   const activeBar = searchParams.get("game");
@@ -54,6 +55,7 @@ export const HomeGame = () => {
             <CaseOpenerGame onOpeningChange={setIsCaseOpening} />
           )}
           {activeBar === GameTypes.Mines && <MinesGame />}
+          {activeBar === GameTypes.Plinko && <PlinkoGame />}
         </div>
       </div>
     </div>

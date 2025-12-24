@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import type { SettingsModalProps } from "../components/SettingsModal/SettingsModal";
-import { useSettings } from "./useSettings";
+import { useProfile } from "./useProfile";
 
 export const useSettingsModal = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -25,7 +25,7 @@ export const useSettingsModal = () => {
     isLoading,
     saveMessage,
     handleClearInput,
-  } = useSettings();
+  } = useProfile();
 
   const settingsModalProps: SettingsModalProps = {
     onClose: closeSettingsModal,
@@ -45,7 +45,6 @@ export const useSettingsModal = () => {
   return {
     isSettingsOpen,
     openSettingsModal,
-    closeSettingsModal,
     settingsModalProps,
   };
 };

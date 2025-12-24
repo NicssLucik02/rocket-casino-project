@@ -3,27 +3,19 @@ import { MineField } from "../MineField/MineField";
 import { formatNumber } from "../../../../../utils/utils";
 import { MinesGameResult } from "../MinesGameResult/MinesGameResult";
 import { GameStatus } from "../../../../../types/enums";
-import type { Cell } from "../../../../../types/Types";
 import { useGameSounds } from "../../../../../hooks/useGameSound";
+import { useMinesGameController } from "../../../../../hooks/useMinesGameController";
 
-type Props = {
-  revealedCount: number;
-  currentMultiplier: number;
-  grid: Cell[];
-  revealCell: (id: number) => boolean;
-  currentWin: number;
-  gameState: GameStatus;
-};
-
-export const MinesPlayArea: React.FC<Props> = ({
-  revealedCount,
-  currentMultiplier,
-  grid,
-  revealCell,
-  currentWin,
-  gameState,
-}) => {
+export const MinesPlayArea = () => {
   const { playClick, playLose } = useGameSounds();
+  const {
+    gameState,
+    grid,
+    revealCell,
+    currentMultiplier,
+    revealedCount,
+    currentWin,
+  } = useMinesGameController();
 
   return (
     <div className={styles["minesGame__playArea"]}>

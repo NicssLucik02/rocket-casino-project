@@ -1,7 +1,7 @@
 import styles from "./settingsModal.module.scss";
 import { X } from "lucide-react";
 import { ClipLoader } from "react-spinners";
-import { useBalanceContext } from "../../contexts/balanceContextBase";
+import { balanceStore } from "../../stores/balanceStore";
 import { UsernameSection } from "./ModalParts/UsernameSection";
 import { ModalActions } from "./ModalParts/ModalActions";
 
@@ -39,7 +39,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   saveMessage,
   handleClearInput,
 }) => {
-  const { balance } = useBalanceContext();
+  const balance = balanceStore((s) => s.balance);
 
   const handleSave = () => {
     saveUsername();
