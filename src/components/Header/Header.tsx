@@ -4,10 +4,10 @@ import styles from "./header.module.scss";
 import { balanceStore } from "../../stores/balanceStore";
 import { ClipLoader } from "react-spinners";
 import { formatNumber } from "../../utils/utils";
-import LogoIcon from "@/assets/icons/logo.svg?react";
-import WalletIcon from "@/assets/icons/Wallet.svg?react";
-import SettingsIcon from "@/assets/icons/Settings.svg?react";
-import LogoutIcon from "@/assets/icons/Logout.svg?react";
+import LogoIcon from "@assets/icons/Logo.svg?react";
+import WalletIcon from "@assets/icons/Wallet.svg?react";
+import SettingsIcon from "@assets/icons/Settings.svg?react";
+import LogoutIcon from "@assets/icons/Logout.svg?react";
 import { Menu } from "lucide-react";
 import { HeaderMenu } from "./HeaderMenu";
 

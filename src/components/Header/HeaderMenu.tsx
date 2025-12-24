@@ -1,9 +1,9 @@
 import { ClipLoader } from "react-spinners";
 import { formatNumber } from "../../utils/utils";
 import styles from "./header.module.scss";
-import WalletIcon from "@/assets/icons/Wallet.svg?react";
-import SettingsIcon from "@/assets/icons/Settings.svg?react";
-import LogoutIcon from "@/assets/icons/Logout.svg?react";
+import WalletIcon from "@assets/icons/Wallet.svg?react";
+import SettingsIcon from "@assets/icons/Settings.svg?react";
+import LogoutIcon from "@assets/icons/Logout.svg?react";
 
 export type HeaderMenuProps = {
   balance: number | null;
@@ -42,4 +42,3 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = ({
     </div>
   </>
 );
-

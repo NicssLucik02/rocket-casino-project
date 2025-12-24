@@ -1,7 +1,7 @@
 import { PrimaryButton } from "../../../../uikit/Buttons/PrimaryButton/PrimaryButton";
 import styles from "./bet-modal.module.scss";
-import emptyCarImg from "../../../../../assets/images/EmptyCar.png";
-import cashoutImg from "../../../../../assets/images/Cashout.png";
+import emptyCarImg from "@assets/images/EmptyCar.png";
+import Cashout from "@assets/images/Cashout.png";
 import classNames from "classnames";
 import { formatNumber } from "../../../../../utils/utils";
 
@@ -24,7 +24,7 @@ export const BetResultModal: React.FC<Props> = ({
     <div className={styles["bet-modal__overlay"]}>
       <div className={styles["bet-modal"]}>
         <div className={styles["bet-modal__container"]}>
-          <img src={crashed ? emptyCarImg : cashoutImg} alt="car" />
+          <img src={crashed ? emptyCarImg : Cashout} alt="car" />
           <p
             className={classNames(
               styles["bet-modal__result"],

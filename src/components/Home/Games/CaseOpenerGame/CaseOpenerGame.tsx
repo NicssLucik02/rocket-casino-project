@@ -11,7 +11,7 @@ import type {
   RarityInfo,
   Rarity,
 } from "../../../../types/Types";
-import BoxIcon from "../../../../assets/icons/Box.svg?react";
+import BoxIcon from "@assets/icons/Box.svg?react";
 import { CaseItem } from "./Case/CaseItem";
 import { CaseOpeningAnimation } from "./CaseOpenerAnimation";
 import { CaseBetResult } from "./CaseBetResult/CaseBetResult";

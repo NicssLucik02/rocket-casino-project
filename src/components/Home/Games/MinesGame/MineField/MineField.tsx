@@ -1,6 +1,6 @@
 import styles from "./mineField.module.scss";
-import WinIcon from "../../../../../assets/icons/Diamond.svg?react";
-import FailedIcon from "../../../../../assets/icons/Bomb.svg?react";
+import WinIcon from "@assets/icons/diamond.svg?react";
+import FailedIcon from "@assets/icons/bomb.svg?react";
 import classNames from "classnames";
 
 type Props = {

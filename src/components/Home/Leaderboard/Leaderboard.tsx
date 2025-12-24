@@ -1,6 +1,6 @@
 import styles from "./leaderboard.module.scss";
 import { LeaderboardItem } from "./LeaderboardItem";
-import LeaderboardIcon from "../../../assets/icons/Leaderboard.svg?react";
+import LeaderboardIcon from "@assets/icons/Leaderboard.svg?react";
 import { useAuthStore } from "../../../stores/authStore/authStore";
 import { useLeaderboardStore } from "../../../stores/leaderBoardStore/leaderboardStore";
 import { useEffect } from "react";
