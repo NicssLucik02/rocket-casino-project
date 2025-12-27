@@ -7,6 +7,18 @@
   background: linear-gradient(to top, rgba(15, 22, 40, 0.95), transparent);
 }
 
+@media (max-width: 860px) {
+  .slotsContainer {
+    left: 4%;
+    right: 4%;
+    padding: 14px 0 10px;
+  }
+
+  .slot {
+    height: 40px;
+  }
+}
+
 .slots {
   display: grid;
   width: 100%;
