@@ -7,13 +7,13 @@ import { useEffect } from "react";
 
 export const Leaderboard = () => {
   const leaderboard = useLeaderboardStore((s) => s.leaderboard);
-  const loading = useLeaderboardStore((s) => s.loading);
+  const isLoading = useLeaderboardStore((s) => s.isLoading);
   const error = useLeaderboardStore((s) => s.error);
   const fetchLeaderboard = useLeaderboardStore((s) => s.fetchLeaderboard);
   const { user } = useAuthStore();
 
   useEffect(() => {
-    void fetchLeaderboard();
+    fetchLeaderboard().catch(() => undefined);
   }, [fetchLeaderboard]);
 
   return (
@@ -32,7 +32,7 @@ export const Leaderboard = () => {
         </div>
 
         <div>
-          {loading ? (
+          {isLoading ? (
             <p>Loading...</p>
           ) : error ? (
             <p>{error}</p>

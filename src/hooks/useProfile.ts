@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useProfileStore } from '../stores/profileStore';
 import { setupProfileSync, cleanupProfileSync } from '../services/profileSync';
 import { supabase } from '../utils/supabaseClient';
+import { MessageType } from '../types/enums';
 
 let mountedCount = 0;
 
 export const useProfile = () => {
   const [changeUserName, setChangeUserName] = useState('');
   const [userNameError, setUserNameError] = useState('');
-  const [saveMessage, setSaveMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const [saveMessage, setSaveMessage] = useState<{ text: string; type: MessageType } | null>(null);
+  const saveMessageTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const {
     username,
@@ -19,6 +21,14 @@ export const useProfile = () => {
     isLoading,
     setLoading,
   } = useProfileStore();
+
+  useEffect(() => {
+    return () => {
+      const timeoutId = saveMessageTimeoutRef.current;
+      if (timeoutId) clearTimeout(timeoutId);
+      saveMessageTimeoutRef.current = null;
+    };
+  }, []);
 
   useEffect(() => {
     mountedCount += 1;
@@ -77,10 +87,20 @@ export const useProfile = () => {
 
   const handleClearInput = () => setChangeUserName(username ?? '');
 
+  const clearSaveMessageAfterDelay = () => {
+    if (saveMessageTimeoutRef.current) clearTimeout(saveMessageTimeoutRef.current);
+    saveMessageTimeoutRef.current = setTimeout(() => {
+      saveMessageTimeoutRef.current = null;
+      setSaveMessage(null);
+    }, 2500);
+  };
+
   const saveUsername = async () => {
     if (userNameError || !changeUserName.trim()) return;
 
     setLoading(true);
+    if (saveMessageTimeoutRef.current) clearTimeout(saveMessageTimeoutRef.current);
+    saveMessageTimeoutRef.current = null;
     setSaveMessage(null);
 
     const { data: { user } } = await supabase.auth.getUser();
@@ -98,17 +118,19 @@ export const useProfile = () => {
 
     if (error) {
       setSaveMessage({
-        text: error.code === '23505' ? 'Это имя занято' : 'Ошибка сохранения',
-        type: 'error',
+        text: error.code === '23505' ? 'This name is already taken' : 'Error saving username',
+        type: MessageType.Error,
       });
     } else {
-      setSaveMessage({ text: 'Username saved!', type: 'success' });
-      setTimeout(() => setSaveMessage(null), 2500);
+      setSaveMessage({ text: 'Username saved!', type: MessageType.Success });
+      clearSaveMessageAfterDelay();
     }
   };
 
   const resetStats = async () => {
     setLoading(true);
+    if (saveMessageTimeoutRef.current) clearTimeout(saveMessageTimeoutRef.current);
+    saveMessageTimeoutRef.current = null;
     setSaveMessage(null);
 
     const { data: { user } } = await supabase.auth.getUser();
@@ -127,10 +149,10 @@ export const useProfile = () => {
     setLoading(false);
 
     if (error) {
-      setSaveMessage({ text: 'Ошибка сброса', type: 'error' });
+      setSaveMessage({ text: 'Error resetting stats', type: MessageType.Error });
     } else {
-      setSaveMessage({ text: 'Stats reset', type: 'success' });
-      setTimeout(() => setSaveMessage(null), 2500);
+      setSaveMessage({ text: 'Stats reset', type: MessageType.Success });
+      clearSaveMessageAfterDelay();
     }
   };
 

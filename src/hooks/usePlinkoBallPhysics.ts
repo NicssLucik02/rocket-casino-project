@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMotionValue } from "framer-motion";
 import type { Pin } from "../types/Types";
-import { PLINKO_BALL_CONFIG } from "../constants";
+import { PLINKO_BALL_CONFIG, PLINKO_PHYSICS_CONFIG } from "../constants";
 
 type Props = {
   index: number;
@@ -32,29 +32,43 @@ export const usePlinkoBallPhysics = ({
     if (!el) return;
 
     const rect = el.getBoundingClientRect();
-    const width = Math.max(1, rect.width);
-    const height = Math.max(1, rect.height);
+    const width = Math.max(PLINKO_PHYSICS_CONFIG.MIN_DIMENSION_PX, rect.width);
+    const height = Math.max(PLINKO_PHYSICS_CONFIG.MIN_DIMENSION_PX, rect.height);
 
-    const pinRadius = Math.max(4, pinSize / 2);
+    const pinRadius = Math.max(PLINKO_PHYSICS_CONFIG.MIN_PIN_RADIUS_PX, pinSize / 2);
     const collisionRadius = PLINKO_BALL_CONFIG.BALL_RADIUS + pinRadius;
     const collisionRadiusSq = collisionRadius * collisionRadius;
 
     const minX = PLINKO_BALL_CONFIG.BALL_RADIUS;
     const maxX = width - PLINKO_BALL_CONFIG.BALL_RADIUS;
-    const ySlots = height * 0.85;
+    const ySlots = height * PLINKO_PHYSICS_CONFIG.SLOTS_Y_RATIO;
 
-    const slotsCountSafe = Math.max(1, slotsCount);
-    const slotsLeft = width * 0.06;
-    const slotsRight = width * 0.94;
-    const slotsWidth = Math.max(1, slotsRight - slotsLeft);
+    const slotsCountSafe = Math.max(PLINKO_PHYSICS_CONFIG.MIN_DIMENSION_PX, slotsCount);
+    const slotsLeft = width * PLINKO_PHYSICS_CONFIG.SLOTS_LEFT_RATIO;
+    const slotsRight = width * PLINKO_PHYSICS_CONFIG.SLOTS_RIGHT_RATIO;
+    const slotsWidth = Math.max(PLINKO_PHYSICS_CONFIG.MIN_DIMENSION_PX, slotsRight - slotsLeft);
     const slotMaxIndex = slotsCountSafe - 1;
 
-    const startJitter = Math.min(Math.max((index - slotMaxIndex / 2) * 0.01, -0.035), 0.035);
-    const startXNormalized = Math.min(Math.max(0.5 + startJitter, 0.05), 0.95);
+    const startJitter = Math.min(
+      Math.max(
+        (index - slotMaxIndex / 2) * PLINKO_PHYSICS_CONFIG.START_JITTER_STEP,
+        PLINKO_PHYSICS_CONFIG.START_JITTER_MIN,
+      ),
+      PLINKO_PHYSICS_CONFIG.START_JITTER_MAX,
+    );
+    const startXNormalized = Math.min(
+      Math.max(
+        PLINKO_PHYSICS_CONFIG.START_X_BASE + startJitter,
+        PLINKO_PHYSICS_CONFIG.START_X_MIN,
+      ),
+      PLINKO_PHYSICS_CONFIG.START_X_MAX,
+    );
 
     let x = startXNormalized * width;
     let y = 0;
-    let vx = (Math.random() - 0.5) * 260 + startJitter * 1600;
+    let vx =
+      (Math.random() - 0.5) * PLINKO_PHYSICS_CONFIG.START_VX_SPREAD +
+      startJitter * PLINKO_PHYSICS_CONFIG.START_VX_JITTER_FACTOR;
     let vy = 0;
 
     left.set(x);
@@ -75,18 +89,24 @@ export const usePlinkoBallPhysics = ({
       if (finished) return;
       finished = true;
 
-      const t = Math.min(Math.max((x - slotsLeft) / slotsWidth, 0), 0.999999);
+      const t = Math.min(
+        Math.max((x - slotsLeft) / slotsWidth, 0),
+        PLINKO_PHYSICS_CONFIG.SLOT_T_MAX,
+      );
       const slotIndex = Math.floor(t * slotsCountSafe);
       onFinish(Math.min(Math.max(slotIndex, 0), slotMaxIndex));
     };
 
     const step = (now: number) => {
-      const dt = Math.min(0.05, (now - lastT) / 1000);
+      const dt = Math.min(PLINKO_PHYSICS_CONFIG.DT_MAX, (now - lastT) / 1000);
       lastT = now;
 
       let remaining = dt;
       while (remaining > 0 && !finished) {
-        const subDt = Math.min(remaining, 1 / 120);
+        const subDt = Math.min(
+          remaining,
+          1 / PLINKO_PHYSICS_CONFIG.SUBSTEPS_PER_SECOND,
+        );
         remaining -= subDt;
 
         vy += PLINKO_BALL_CONFIG.GRAVITY * subDt;
@@ -105,8 +125,18 @@ export const usePlinkoBallPhysics = ({
         }
 
         for (const pin of pinsPx) {
-          if (Math.abs(y - pin.y) > collisionRadius * 2.5) continue;
-          if (Math.abs(x - pin.x) > collisionRadius * 2.5) continue;
+          if (
+            Math.abs(y - pin.y) >
+            collisionRadius * PLINKO_PHYSICS_CONFIG.COLLISION_CULL_MULTIPLIER
+          ) {
+            continue;
+          }
+          if (
+            Math.abs(x - pin.x) >
+            collisionRadius * PLINKO_PHYSICS_CONFIG.COLLISION_CULL_MULTIPLIER
+          ) {
+            continue;
+          }
 
           const dx = x - pin.x;
           const dy = y - pin.y;
@@ -117,12 +147,12 @@ export const usePlinkoBallPhysics = ({
           if (now - lastHit < PLINKO_BALL_CONFIG.PIN_HIT_COOLDOWN) continue;
           lastPinHitAt[pin.key] = now;
 
-          const dist = Math.sqrt(Math.max(0.0001, distSq));
+          const dist = Math.sqrt(Math.max(PLINKO_PHYSICS_CONFIG.MIN_DIST_SQ, distSq));
           const nx = dx / dist;
           const ny = dy / dist;
 
-          x = pin.x + nx * (collisionRadius + 0.5);
-          y = pin.y + ny * (collisionRadius + 0.5);
+          x = pin.x + nx * (collisionRadius + PLINKO_PHYSICS_CONFIG.PENETRATION_SLOP);
+          y = pin.y + ny * (collisionRadius + PLINKO_PHYSICS_CONFIG.PENETRATION_SLOP);
 
           const vn = vx * nx + vy * ny;
           if (vn < 0) {
@@ -132,9 +162,9 @@ export const usePlinkoBallPhysics = ({
 
             const tx = -ny;
             const ty = nx;
-            const jitter = (Math.random() - 0.5) * 160;
+            const jitter = (Math.random() - 0.5) * PLINKO_PHYSICS_CONFIG.TANGENTIAL_JITTER;
             vx += tx * jitter;
-            vy += ty * jitter * 0.18;
+            vy += ty * jitter * PLINKO_PHYSICS_CONFIG.TANGENTIAL_JITTER_Y_FACTOR;
           }
         }
 

@@ -5,7 +5,7 @@ import type { LeaderboardState } from '../../types/storeTypes';
 
 export const useLeaderboardStore = create<LeaderboardState>((set) => {
   const fetchLeaderboard = async () => {
-    set({ loading: true, error: null });
+    set({ isLoading: true, error: null });
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -24,13 +24,13 @@ export const useLeaderboardStore = create<LeaderboardState>((set) => {
     } catch (err) {
       set({ error: (err as Error).message || 'Failed to load leaderboard' });
     } finally {
-      set({ loading: false });
+      set({ isLoading: false });
     }
   };
 
   return {
     leaderboard: [],
-    loading: false,
+    isLoading: false,
     error: null,
     fetchLeaderboard,
   };

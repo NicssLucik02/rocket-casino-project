@@ -1,4 +1,4 @@
-import { useCallback, useRef, type ChangeEvent } from 'react';
+import { useRef, type ChangeEvent } from 'react';
 import { balanceStore } from '../stores/balanceStore';
 import { useMinesStore } from '../stores/minesGameStore';
 import { GameStatus } from '../types/enums';
@@ -29,7 +29,7 @@ export const useMinesGameController = () => {
   const startInProgressRef = useRef(false);
   const cashOutInProgressRef = useRef(false);
 
-  const startGame = useCallback(async () => {
+  const startGame = async () => {
     if (startInProgressRef.current || gameState === GameStatus.Playing) return;
     startInProgressRef.current = true;
 
@@ -50,9 +50,9 @@ export const useMinesGameController = () => {
     } finally {
       startInProgressRef.current = false;
     }
-  }, [betAmount, gameState, spendBalance, getTotalWag, countGames, startGameLogic, setBetAmount]);
+  };
 
-  const cashOut = useCallback(async () => {
+  const cashOut = async () => {
     if (cashOutInProgressRef.current || gameState !== GameStatus.Playing) return;
     cashOutInProgressRef.current = true;
 
@@ -65,7 +65,7 @@ export const useMinesGameController = () => {
     } finally {
       cashOutInProgressRef.current = false;
     }
-  }, [gameState, cashOutLogic, addToBalance, getTotalWon, countWonGames]);
+  };
 
   const onBetChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

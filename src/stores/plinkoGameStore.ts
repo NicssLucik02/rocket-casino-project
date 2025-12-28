@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { PlinkoState } from "../types/storeTypes";
 import { MAX_HISTORY_ITEMS, PLINKO_HISTORY_STORAGE_KEY } from "../constants";
-import { BallsCount, LinesCount, RiskLevel } from "../types/enums";
+import { BallsCount, RiskLevel } from "../types/enums";
 
 export const riskOrder = [RiskLevel.Low, RiskLevel.Medium, RiskLevel.High] as const;
 
@@ -9,7 +9,7 @@ export const usePlinkoGameStore = create<PlinkoState>((set, get) => ({
   currentBet: 2,
   currentRisk: RiskLevel.Medium,
   currentBallsCount: BallsCount.One,
-  currentLinesCount: LinesCount.L8,
+  currentLinesCount: 8,
 
   setBet: (bet) => set({ currentBet: bet }),
 

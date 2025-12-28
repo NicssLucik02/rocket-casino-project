@@ -15,7 +15,7 @@ export const PlinkoRiskPanel: React.FC<Props> = ({ disabled }) => {
         <p className={styles["plinko-panel__risk-title"]}>Risk</p>
         <div className={styles["plinko-panel__risk-actions"]}>
           <SecondaryButton
-            amount="<"
+            content="<"
             widthSize="25"
             handler={handlePrevRisk}
             fontSize="16px"
@@ -24,7 +24,7 @@ export const PlinkoRiskPanel: React.FC<Props> = ({ disabled }) => {
           />
           <p>{currentRisk}</p>
           <SecondaryButton
-            amount=">"
+            content=">"
             widthSize="25"
             handler={handleNextRisk}
             fontSize="16px"

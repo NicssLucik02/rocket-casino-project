@@ -102,7 +102,10 @@ export const RocketGame = () => {
               amount={num}
               symbol="$"
               widthSize={"25"}
-              handler={(_, amount) => setBetAmount(amount)}
+              handler={(_, amount) => {
+                if (amount == null) return;
+                setBetAmount(String(amount));
+              }}
             />
           ))}
         </div>

@@ -26,6 +26,11 @@ export enum RocketGameResult {
   Crashed = "crashed",
 }
 
+export enum MessageType {
+  Success = "success",
+  Error = "error",
+}
+
 export enum MinesCount {
   One = 1,
   Three = 3,
@@ -47,15 +52,6 @@ export enum BallsCount {
   Ten = 10,
 }
 
-export enum LinesCount {
-  L8 = 8,
-  L9 = 9,
-  L10 = 10,
-  L11 = 11,
-  L12 = 12,
-  L13 = 13,
-  L14 = 14,
-  L15 = 15,
-  L16 = 16,
-}
+export const getLinesCounts = () => [8, 9, 10, 11, 12, 13, 14, 15, 16] as const;
 
+export type LinesCount = ReturnType<typeof getLinesCounts>[number];

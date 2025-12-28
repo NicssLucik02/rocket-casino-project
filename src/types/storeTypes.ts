@@ -33,7 +33,7 @@ export type BalanceState = {
 
 export type LeaderboardState = {
   leaderboard: LeaderboardEntry[];
-  loading: boolean;
+  isLoading: boolean;
   error: string | null;
   fetchLeaderboard: () => Promise<void>;
 }

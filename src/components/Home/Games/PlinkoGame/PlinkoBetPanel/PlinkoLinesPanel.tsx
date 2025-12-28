@@ -19,7 +19,7 @@ export const PlinkoLinesPanel: React.FC<Props> = ({ disabled }) => {
                 {lines.map((item) => (
                     <SecondaryButton 
                       key={item} 
-                      amount={item.toString()} 
+                      amount={item} 
                       widthSize="30" 
                       handler={() => handleChangeLinesCount(item)}
                       fontSize="16px" 

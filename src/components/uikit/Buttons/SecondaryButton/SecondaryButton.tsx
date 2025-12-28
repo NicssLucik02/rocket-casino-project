@@ -3,10 +3,11 @@ import styles from "./secondaryButton.module.scss";
 import { useCallback } from "react";
 
 type Props = {
-  amount: number | string;
+  amount?: number;
+  content?: string;
   widthSize: string;
   symbol?: string;
-  handler: (event: React.MouseEvent<HTMLButtonElement>, amount: string) => void;
+  handler: (event: React.MouseEvent<HTMLButtonElement>, amount?: number) => void;
   fontSize?: string;
   bgColor?: string;
   disabled?: boolean;
@@ -15,6 +16,7 @@ type Props = {
 
 export const SecondaryButton: React.FC<Props> = ({
   amount,
+  content,
   widthSize,
   symbol,
   handler,
@@ -25,7 +27,7 @@ export const SecondaryButton: React.FC<Props> = ({
 }) => {
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) =>
-      handler(event, amount.toString()),
+      handler(event, amount),
     [handler, amount],
   );
   return (
@@ -44,7 +46,7 @@ export const SecondaryButton: React.FC<Props> = ({
       }}
     >
       {symbol}
-      {amount}
+      {content || amount}
     </button>
   );
 };

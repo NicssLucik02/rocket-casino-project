@@ -1,4 +1,4 @@
-import { BallsCount, LinesCount } from "../types/enums";
+import { BallsCount, getLinesCounts } from "../types/enums";
 
 export const balls = [
   {
@@ -19,14 +19,5 @@ export const balls = [
   },
 ];
 
-export const lines = [
-  LinesCount.L8,
-  LinesCount.L9,
-  LinesCount.L10,
-  LinesCount.L11,
-  LinesCount.L12,
-  LinesCount.L13,
-  LinesCount.L14,
-  LinesCount.L15,
-  LinesCount.L16,
-]
+export const lines = getLinesCounts();
+

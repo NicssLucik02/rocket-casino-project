@@ -5,7 +5,7 @@ import { useProfile } from './useProfile';
 
 export const usePlinkoPlay = () => {
   const [error, setError] = useState<string | null>(null);
-  const [isStarting, setIsStarting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     currentBet,
@@ -18,28 +18,28 @@ export const usePlinkoPlay = () => {
   const { getTotalWag, countGames } = useProfile();
 
   const play = useCallback(async () => {
-    if (isPlaying || isStarting) return;
+    if (isPlaying || isLoading) return;
 
     setError(null);
-    setIsStarting(true);
+    setIsLoading(true);
 
     const totalBet = currentBet * Number(currentBallsCount);
 
     const result = await spendBalance(totalBet);
     if (!result.success) {
       setError(result.error ?? "Insufficient balance");
-      setIsStarting(false);
+      setIsLoading(false);
       return;
     }
 
     await Promise.all([getTotalWag(totalBet), countGames()]);
     startRound();
-    setIsStarting(false);
-  }, [currentBet, currentBallsCount, isPlaying, isStarting, spendBalance, getTotalWag, countGames, startRound]);
+    setIsLoading(false);    
+  }, [currentBet, currentBallsCount, isPlaying, isLoading, spendBalance, getTotalWag, countGames, startRound]);
 
   return {
     play,
-    isLoading: isStarting,
+    isLoading,
     error,
   };
 };
