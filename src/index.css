@@ -1,0 +1,41 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --color-white: rgba(255, 255, 255, 1);
+  --background-modal: rgba(29, 41, 61, 0.5);
+  --safe-area-color: rgb(74, 222, 128);
+  --mine-color: rgb(239, 68, 68);
+  --accent-color: rgba(194, 122, 255, 1);
+  --board-color: rgb(26, 26, 46);
+  --primary-gradient: rgba(21, 93, 252, 1), rgba(152, 16, 250, 1);
+  --success-gradient: rgba(0, 166, 62, 1), rgba(0, 153, 102, 1);
+  --failed-gradient: rgba(231, 0, 11, 1), rgba(159, 7, 18, 1);
+  --info-gradient: rgba(28, 57, 142, 0.2), rgba(89, 22, 139, 0.2);
+}
+
+* {
+  color: var(--color-white);
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: var(--color-white);
+  height: 100%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(15, 23, 43, 1),
+    rgba(0, 79, 59, 0.4),
+    rgba(89, 22, 139, 1)
+  );
+}

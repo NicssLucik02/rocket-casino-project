@@ -1,0 +1,33 @@
+.mine-field {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom right, var(--primary-gradient));
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+
+  aspect-ratio: 1 / 1;
+  box-shadow:
+    0 4px 6px -4 rgba(0, 0, 0, 0.1),
+    0 10px 15px -3 rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 150ms ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &.win {
+    background: linear-gradient(to bottom right, var(--success-gradient));
+  }
+
+  &.lost {
+    background: linear-gradient(to bottom right, var(--failed-gradient));
+  }
+
+  &__icon {
+    width: 40%;
+    height: 40%;
+  }
+}

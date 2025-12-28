@@ -1,0 +1,160 @@
+@use "../../../styles/mixins.scss" as *;
+
+.home-game__main-window {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  margin: 0 auto;
+  overflow: hidden;
+  background-color: rgba(26, 29, 40, 1);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+  @include tablet {
+    height: 300px;
+  }
+
+  @include mobile {
+    height: 250px;
+    border-radius: 12px;
+  }
+}
+
+.home-game__main-window .road,
+.home-game__main-window .stripes {
+  animation: none;
+}
+
+.home-game__main-window[data-running="true"] .bg-city {
+  animation-play-state: running;
+}
+.home-game__main-window[data-running="true"] .road,
+.home-game__main-window[data-running="true"] .stripes {
+  animation: move-road var(--duration, 8s) linear forwards;
+}
+
+.home-game__main-window[data-running="true"] .window-icon {
+  animation: car-bounce 0.4s ease-in-out infinite alternate;
+}
+
+.bg-city {
+  position: absolute;
+  left: 0;
+  bottom: 120px;
+  width: 300%;
+  height: 320px;
+  background-image: url("../../../assets/images/CityBackground.jpg");
+  background-repeat: repeat-x;
+  background-position: bottom center;
+  background-size: auto 100%;
+  pointer-events: none;
+  z-index: 1;
+
+  animation: move-city calc(var(--duration, 8s) * 3) linear infinite paused;
+}
+
+.home-game__main-window__factor {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 4.5rem;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 20px #000;
+  z-index: 10;
+
+  @include tablet {
+    font-size: 3rem;
+    top: 15px;
+  }
+
+  @include mobile {
+    font-size: 2rem;
+    top: 10px;
+  }
+}
+
+.crashed {
+  color: rgba(230, 31, 31, 1);
+  text-shadow: none;
+  font-weight: 600;
+}
+
+.cashout {
+  color: rgba(25, 221, 87, 1);
+  text-shadow: none;
+  font-weight: 600;
+}
+
+.window-icon {
+  position: absolute;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  width: 220px;
+  z-index: 10;
+
+  @include tablet {
+    width: 180px;
+    bottom: 30px;
+  }
+
+  @include mobile {
+    width: 140px;
+    bottom: 20px;
+  }
+}
+
+.road {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 140px;
+  background: #222;
+  z-index: 1;
+}
+
+.stripes {
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  width: 200%;
+  height: 10px;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 100px,
+    #fff 100px,
+    #fff 200px
+  );
+  z-index: 2;
+}
+
+@keyframes move-road {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes car-bounce {
+  from {
+    transform: translateX(-50%) translateY(0) rotate(0deg);
+  }
+  to {
+    transform: translateX(-50%) translateY(-10px) rotate(1.5deg);
+  }
+}
+
+@keyframes move-city {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-33.333%);
+  }
+}

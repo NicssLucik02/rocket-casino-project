@@ -1,0 +1,44 @@
+@import '../../../../../styles/mixins.scss';
+
+.board {
+  width: 65%;
+  max-width: 980px;
+  margin: 0 auto;
+  max-height: 570px;
+
+  @include desktop {
+    width: 100%;
+  }
+
+}
+
+.boardClip {
+  background: linear-gradient(135deg, #1a2338 0%, #0f1628 100%);
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+  max-height: 570px;
+}
+
+.boardInner {
+  position: relative;
+  padding-bottom: min(115%, 570px);
+  background: radial-gradient(ellipse at top, #1e2a48 0%, #0b1220 80%);
+
+  @include desktop {
+    padding-bottom: min(105%, 570px);
+  }
+
+  @include tablet {
+    padding-bottom: min(65%, 570px);
+  }
+
+  @include mobile {
+    padding-bottom: min(100%, 570px);
+  }
+}
+
+@keyframes pulse {
+  from { opacity: 0.4; }
+  to { opacity: 0.8; }
+}

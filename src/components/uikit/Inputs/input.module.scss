@@ -1,0 +1,13 @@
+.primary-input {
+  box-sizing: border-box;
+  height: 36px;
+  border-radius: 8px;
+  padding: 0 0 0 12px;
+  border: none;
+  color: rgba(255, 255, 255, 1);
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

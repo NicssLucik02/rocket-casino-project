@@ -1,0 +1,134 @@
+@use "../../../styles/mixins.scss" as *;
+
+.home-game {
+  flex-shrink: 0;
+  width: 65%;
+
+  @include tablet {
+    width: 100%;
+  }
+}
+
+.home-game__tabs {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  background-color: var(--background-modal);
+  height: 48px;
+  border-radius: 14px;
+  padding-inline: 5px;
+  gap: 5px;
+  overflow-x: auto;
+
+  @include tablet {
+    height: 44px;
+  }
+
+  @include mobile {
+    height: 42px;
+  }
+}
+
+.home-game__main-stub {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 248px;
+  border: 1px solid rgba(173, 70, 255, 0.3);
+  background: linear-gradient(
+    to right top,
+    rgba(15, 23, 43, 1),
+    rgba(28, 57, 142, 0.2),
+    rgba(89, 22, 139, 0.2)
+  );
+  border-radius: 14px;
+
+  @include tablet {
+    height: 220px;
+  }
+
+  @include mobile {
+    height: 200px;
+  }
+
+  &-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: rgb(104, 104, 104);
+    margin: 0;
+    text-align: center;
+  }
+}
+
+.home-game__main {
+  background-color: var(--background-modal);
+  border-radius: 14px;
+  margin-top: 38px;
+
+  @include tablet {
+    margin-top: 16px;
+  }
+
+  &-container {
+    padding: 24px;
+
+    @include tablet {
+      padding: 16px;
+    }
+
+    @include mobile {
+      padding: 12px;
+    }
+  }
+
+  &-controls {
+    display: flex;
+    flex-direction: column;
+
+    &__launch {
+      display: flex;
+      flex-direction: row;
+      gap: 16px;
+
+      @include mobile {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+
+    &__input {
+      &:focus {
+        outline: solid 1px #e2e2e258;
+      }
+    }
+
+    &__additional {
+      display: flex;
+      margin-top: 24px;
+      gap: 8px;
+
+      @include mobile {
+        margin-top: 12px;
+      }
+    }
+  }
+}
+
+.window-icon {
+  position: absolute;
+  width: 40%;
+  bottom: 40px;
+  right: 30%;
+  z-index: 3;
+
+  @include tablet {
+    width: 50%;
+  }
+
+  @include mobile {
+    width: 60%;
+    bottom: 20px;
+  }
+}

@@ -1,0 +1,40 @@
+.plinko-history__item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--background-modal);
+        padding: 12px;
+        border: 1px solid rgba(69, 85, 108, 1);
+        border-radius: 10px;
+       min-width: 85px;
+        height: 80px;
+
+        &-amount {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--safe-area-color);
+            margin: 0 0 10px;
+        }
+        
+        &-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin: 0;
+
+            &-desc {
+                font-size: 12px;
+                font-weight: 400;
+                color: rgb(172, 172, 172);
+            }
+
+            &-value {
+                font-size: 11px;
+                font-weight: 400;
+                color: rgb(202, 213, 226);
+                color: rgb(172, 172, 172);
+            }
+        }
+    }
